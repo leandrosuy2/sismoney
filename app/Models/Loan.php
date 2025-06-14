@@ -15,7 +15,9 @@ class Loan extends Model
         'idUsuario',
         'valor',
         'dataPagamento',
-        'status'
+        'status',
+        'telefone',
+        'nome'
     ];
 
     protected $casts = [

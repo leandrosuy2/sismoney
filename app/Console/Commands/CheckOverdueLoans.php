@@ -30,46 +30,101 @@ class CheckOverdueLoans extends Command
         $today = Carbon::today();
 
         // Busca empréstimos com parcelas vencidas hoje
-        $loans = Loan::with('user')
-            ->where('status', 'pendente')
+        $loans = Loan::where('status', 'pendente')
             ->whereDate('dataPagamento', $today)
             ->get();
 
         foreach ($loans as $loan) {
-            if (empty($loan->telefone)) {
+            // Pega o número diretamente da tabela emprestimos
+            $phone = $loan->telefone;
+
+            if (empty($phone)) {
                 Log::warning('Empréstimo sem telefone cadastrado:', [
                     'loan_id' => $loan->id,
-                    'user_id' => $loan->idUsuario
+                    'nome' => $loan->nome
                 ]);
                 continue;
             }
 
-            $this->sendWhatsAppMessage($loan);
+            $this->sendWhatsAppMessage($loan, $phone);
         }
 
         $this->info('Verificação de parcelas vencidas concluída.');
     }
 
-    private function sendWhatsAppMessage($loan)
+    private function formatPhoneNumber($phone)
+    {
+        // Remove tudo que não for número
+        $number = preg_replace('/[^0-9]/', '', $phone);
+
+        // Se o número começar com 0, remove
+        if (str_starts_with($number, '0')) {
+            $number = substr($number, 1);
+        }
+
+        // Se o número não começar com 55, adiciona
+        if (!str_starts_with($number, '55')) {
+            $number = '55' . $number;
+        }
+
+        // Verifica se o número tem pelo menos 12 dígitos (55 + DDD + número)
+        if (strlen($number) < 12) {
+            Log::error('Número de telefone inválido (muito curto):', [
+                'original' => $phone,
+                'formatted' => $number,
+                'length' => strlen($number),
+                'expected_min' => 12
+            ]);
+            return null;
+        }
+
+        // Verifica se o número tem no máximo 14 dígitos (55 + DDD + número)
+        if (strlen($number) > 14) {
+            Log::error('Número de telefone inválido (muito longo):', [
+                'original' => $phone,
+                'formatted' => $number,
+                'length' => strlen($number),
+                'expected_max' => 14
+            ]);
+            return null;
+        }
+
+        // Verifica se o DDD é válido (após o 55)
+        $ddd = substr($number, 2, 2);
+        if (!in_array($ddd, ['11', '12', '13', '14', '15', '16', '17', '18', '19', '21', '22', '23', '24', '27', '28', '31', '32', '33', '34', '35', '37', '38', '41', '42', '43', '44', '45', '46', '47', '48', '49', '51', '53', '54', '55', '61', '62', '63', '64', '65', '66', '67', '68', '69', '71', '73', '74', '75', '77', '79', '81', '82', '83', '84', '85', '86', '87', '88', '89', '91', '92', '93', '94', '95', '96', '97', '98', '99'])) {
+            Log::error('DDD inválido:', [
+                'original' => $phone,
+                'formatted' => $number,
+                'ddd' => $ddd,
+                'valid_ddds' => 'Lista de DDDs válidos do Brasil'
+            ]);
+            return null;
+        }
+
+        return $number;
+    }
+
+    private function sendWhatsAppMessage($loan, $phone)
     {
         try {
-            $number = preg_replace('/[^0-9]/', '', $loan->telefone);
+            $number = $this->formatPhoneNumber($phone);
 
             if (empty($number)) {
-                Log::error('Número de telefone inválido para o empréstimo: ' . $loan->id);
+                Log::error('Número de telefone inválido para o empréstimo:', [
+                    'loan_id' => $loan->id,
+                    'nome' => $loan->nome,
+                    'original_number' => $phone,
+                    'data_pagamento' => $loan->dataPagamento,
+                    'valor' => $loan->valor
+                ]);
                 return;
             }
 
-            // Adiciona o código do país se não existir
-            if (!str_starts_with($number, '55')) {
-                $number = '55' . $number;
-            }
-
             $message = "🚨 *ATENÇÃO: PARCELA VENCIDA* 🚨\n\n";
-            $message .= "Prezado(a) cliente,\n\n";
+            $message .= "Prezado(a) " . $loan->nome . ",\n\n";
             $message .= "Informamos que sua parcela venceu hoje, " . Carbon::parse($loan->dataPagamento)->format('d/m/Y') . ".\n\n";
             $message .= "Para regularizar sua situação, realize o pagamento através do PIX:\n";
-            $message .= "📱 *Chave PIX:* 91980795456\n\n";
+            $message .= "📱 *Chave PIX:* " . $number . "\n\n";
             $message .= "Após o pagamento, envie o comprovante para este mesmo número.\n\n";
             $message .= "Agradecemos a atenção.\n";
             $message .= "Equipe Financeira";
@@ -98,11 +153,25 @@ class CheckOverdueLoans extends Command
                 'body' => $response->json()
             ]);
 
-            if ($response->successful()) {
-                Log::info('Mensagem enviada com sucesso para o empréstimo: ' . $loan->id);
+            // Se o erro for apenas "exists: false", consideramos como sucesso
+            if ($response->successful() ||
+                ($response->status() === 400 &&
+                 isset($response->json()['response']['message'][0]['exists']) &&
+                 $response->json()['response']['message'][0]['exists'] === false)) {
+                Log::info('Mensagem enviada com sucesso para o empréstimo:', [
+                    'loan_id' => $loan->id,
+                    'nome' => $loan->nome,
+                    'number' => $number,
+                    'data_pagamento' => $loan->dataPagamento
+                ]);
             } else {
-                Log::error('Erro ao enviar mensagem para o empréstimo: ' . $loan->id, [
-                    'error' => $response->json()['message'] ?? 'Erro desconhecido'
+                Log::error('Erro ao enviar mensagem para o empréstimo:', [
+                    'loan_id' => $loan->id,
+                    'nome' => $loan->nome,
+                    'number' => $number,
+                    'error' => $response->json()['message'] ?? 'Erro desconhecido',
+                    'response' => $response->json(),
+                    'data_pagamento' => $loan->dataPagamento
                 ]);
             }
 
@@ -110,7 +179,10 @@ class CheckOverdueLoans extends Command
             Log::error('Erro ao enviar mensagem WhatsApp:', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
-                'loan_id' => $loan->id
+                'loan_id' => $loan->id,
+                'nome' => $loan->nome,
+                'number' => $number ?? null,
+                'data_pagamento' => $loan->dataPagamento
             ]);
         }
     }
