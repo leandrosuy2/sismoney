@@ -19,7 +19,8 @@ class Emprestimo extends Model
         'valor_jurosdiarios',
         'dataPagamento',
         'telefone',
-        'idUsuario'
+        'idUsuario',
+        'status'
     ];
 
     protected $casts = [
