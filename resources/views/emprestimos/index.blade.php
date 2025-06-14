@@ -147,7 +147,7 @@
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                                 @if($emprestimo->status !== 'pago')
-                                                    <button onclick="abrirModalPagamento({{ $emprestimo->id }}, '{{ number_format($emprestimo->valor, 2, ',', '.') }}', '{{ $emprestimo->dataPagamento }}')" class="text-green-600 hover:text-green-900" title="Pagar Empréstimo">
+                                                    <button onclick="abrirModalPagamento({{ $emprestimo->id }}, '{{ number_format($emprestimo->valor, 2, ',', '.') }}', '{{ $emprestimo->dataPagamento }}', '{{ number_format($emprestimo->valor, 2, ',', '.') }}')" class="text-green-600 hover:text-green-900" title="Abater Empréstimo">
                                                         <i class="fas fa-money-bill-wave"></i>
                                                     </button>
                                                     <button onclick="abrirModalAbatimento({{ $emprestimo->id }})" class="text-blue-600 hover:text-blue-900" title="Abater Parcela">
@@ -190,7 +190,7 @@
         <div class="mt-3">
             <div class="text-center mb-8">
                 <i class="fas fa-money-bill-wave text-4xl text-green-500 mb-4"></i>
-                <h3 class="text-2xl font-bold text-gray-900">Pagar Empréstimo</h3>
+                <h3 class="text-2xl font-bold text-gray-900">Abater Empréstimo</h3>
                 <p class="mt-2 text-sm text-gray-500">Insira os detalhes do pagamento abaixo</p>
             </div>
 
