@@ -27,6 +27,10 @@ Route::middleware(['auth'])->group(function () {
 
     // Contas a Receber
     Route::resource('contas-receber', ContaReceberController::class);
+
+    // Pagamento e Abatimento de Empréstimos
+    Route::post('/emprestimos/{emprestimo}/pagar', [EmprestimoController::class, 'pagar'])->name('emprestimos.pagar');
+    Route::post('/emprestimos/{emprestimo}/abater', [EmprestimoController::class, 'abater'])->name('emprestimos.abater');
 });
 
 // Rotas para acesso dos usuários aos empréstimos

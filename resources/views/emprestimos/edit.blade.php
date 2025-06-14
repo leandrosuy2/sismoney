@@ -123,42 +123,18 @@
                                 </div>
                             </div>
 
-                            <!-- Meses -->
+                            <!-- Data de Pagamento -->
                             <div class="space-y-2">
-                                <label for="meses" class="block text-sm font-medium text-gray-700">
+                                <label for="dataPagamento" class="block text-sm font-medium text-gray-700">
                                     <i class="fas fa-calendar mr-1 text-indigo-600"></i>
-                                    Meses
+                                    Data de Pagamento
                                 </label>
                                 <div class="relative">
                                     <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                         <i class="fas fa-calendar text-gray-400"></i>
                                     </div>
-                                    <input type="number" name="meses" id="meses"
-                                           value="{{ old('meses', $emprestimo->meses) }}"
-                                           placeholder="0"
-                                           required
-                                           class="block w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200">
-                                    @error('meses')
-                                        <p class="mt-1 text-sm text-red-600 flex items-center">
-                                            <i class="fas fa-exclamation-circle mr-1"></i>
-                                            {{ $message }}
-                                        </p>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <!-- Data de Pagamento -->
-                            <div class="space-y-2">
-                                <label for="dataPagamento" class="block text-sm font-medium text-gray-700">
-                                    <i class="fas fa-calendar-alt mr-1 text-indigo-600"></i>
-                                    Data de Pagamento
-                                </label>
-                                <div class="relative">
-                                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                        <i class="fas fa-calendar-alt text-gray-400"></i>
-                                    </div>
                                     <input type="date" name="dataPagamento" id="dataPagamento"
-                                           value="{{ old('dataPagamento', $emprestimo->dataPagamento) }}"
+                                           value="{{ old('dataPagamento', $emprestimo->dataPagamento->format('Y-m-d')) }}"
                                            required
                                            class="block w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200">
                                     @error('dataPagamento')
@@ -182,44 +158,9 @@
                                     </div>
                                     <input type="text" name="telefone" id="telefone"
                                            value="{{ old('telefone', $emprestimo->telefone) }}"
-                                           placeholder="(00) 00000-0000"
+                                           required
                                            class="block w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200">
                                     @error('telefone')
-                                        <p class="mt-1 text-sm text-red-600 flex items-center">
-                                            <i class="fas fa-exclamation-circle mr-1"></i>
-                                            {{ $message }}
-                                        </p>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <!-- Status -->
-                            <div class="space-y-2">
-                                <label for="status" class="block text-sm font-medium text-gray-700">
-                                    <i class="fas fa-info-circle mr-1 text-indigo-600"></i>
-                                    Status
-                                </label>
-                                <div class="relative">
-                                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                        <i class="fas fa-info-circle text-gray-400"></i>
-                                    </div>
-                                    <select name="status" id="status" required
-                                            class="block w-full pl-12 pr-10 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200 appearance-none bg-white">
-                                        <option value="">Selecione o status...</option>
-                                        <option value="pendente" {{ old('status', $emprestimo->status) == 'pendente' ? 'selected' : '' }}>
-                                            <i class="fas fa-clock text-yellow-500"></i> Pendente
-                                        </option>
-                                        <option value="pago" {{ old('status', $emprestimo->status) == 'pago' ? 'selected' : '' }}>
-                                            <i class="fas fa-check text-green-500"></i> Pago
-                                        </option>
-                                        <option value="atrasado" {{ old('status', $emprestimo->status) == 'atrasado' ? 'selected' : '' }}>
-                                            <i class="fas fa-exclamation-triangle text-red-500"></i> Atrasado
-                                        </option>
-                                    </select>
-                                    <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                                        <i class="fas fa-chevron-down text-gray-400"></i>
-                                    </div>
-                                    @error('status')
                                         <p class="mt-1 text-sm text-red-600 flex items-center">
                                             <i class="fas fa-exclamation-circle mr-1"></i>
                                             {{ $message }}

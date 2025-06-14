@@ -12,7 +12,7 @@ class ContaPagarController extends Controller
      */
     public function index()
     {
-        $contas = ContaPagar::all();
+        $contas = ContaPagar::where('idUsuario', auth()->user()->idUsuario)->get();
         return view('contas-pagar.index', compact('contas'));
     }
 
@@ -37,7 +37,10 @@ class ContaPagarController extends Controller
             'status' => 'required'
         ]);
 
-        ContaPagar::create($request->all());
+        $data = $request->all();
+        $data['idUsuario'] = auth()->user()->idUsuario;
+
+        ContaPagar::create($data);
 
         return redirect()->route('contas-pagar.index')
             ->with('success', 'Conta criada com sucesso.');

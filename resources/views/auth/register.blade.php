@@ -46,17 +46,17 @@
                         @csrf
 
                         <div>
-                            <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Nome</label>
+                            <label for="usuario" class="block text-sm font-medium text-gray-700 mb-2">Nome</label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                     <i class="fas fa-user text-gray-400"></i>
                                 </div>
-                                <input id="name" name="name" type="text" required
+                                <input id="usuario" name="usuario" type="text" required
                                        class="input-focus block w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-green-500"
                                        placeholder="Seu nome"
-                                       value="{{ old('name') }}">
+                                       value="{{ old('usuario') }}">
                             </div>
-                            @error('name')
+                            @error('usuario')
                                 <p class="mt-2 text-sm text-red-600 flex items-center">
                                     <i class="fas fa-exclamation-circle mr-2"></i>
                                     {{ $message }}

@@ -66,26 +66,42 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'cpfCnpj' => 'required|string|max:20|unique:users',
-            'telefone' => 'required|string|max:20',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
+        Log::info('Iniciando processo de registro');
+        Log::info('Dados recebidos:', $request->all());
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'cpfCnpj' => $request->cpfCnpj,
-            'telefone' => $request->telefone,
-            'password' => Hash::make($request->password),
-            'status' => 'ativo'
-        ]);
+        try {
+            $request->validate([
+                'usuario' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users',
+                'cpfCnpj' => 'required|string|max:20|unique:users',
+                'telefone' => 'required|string|max:20',
+                'password' => 'required|string|min:8|confirmed',
+            ]);
 
-        Auth::login($user);
+            Log::info('Validação passou com sucesso');
 
-        return redirect()->intended('dashboard');
+            $userData = [
+                'usuario' => $request->usuario,
+                'email' => $request->email,
+                'cpfCnpj' => $request->cpfCnpj,
+                'telefone' => $request->telefone,
+                'senha' => Hash::make($request->password),
+                'ativo' => true
+            ];
+
+            Log::info('Dados preparados para criação:', $userData);
+
+            $user = User::create($userData);
+            Log::info('Usuário criado com sucesso. ID: ' . $user->idUsuario);
+
+            return redirect('/')->with('success', 'Usuário registrado com sucesso! Faça login para continuar.');
+        } catch (\Exception $e) {
+            Log::error('Erro ao registrar usuário: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
+            return back()
+                ->withInput()
+                ->withErrors(['error' => 'Erro ao registrar usuário: ' . $e->getMessage()]);
+        }
     }
 
     public function me(Request $request)

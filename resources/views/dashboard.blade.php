@@ -15,98 +15,101 @@
                         </h2>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <!-- Total de Empréstimos -->
+                    <!-- Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <!-- Dinheiro na Rua Normal -->
                         <div class="bg-white overflow-hidden shadow rounded-lg">
                             <div class="p-5">
                                 <div class="flex items-center">
-                                    <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
-                                        <i class="fas fa-hand-holding-usd text-white text-2xl"></i>
+                                    <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
+                                        <i class="fas fa-money-bill-wave text-white text-2xl"></i>
                                     </div>
                                     <div class="ml-5 w-0 flex-1">
                                         <dl>
                                             <dt class="text-sm font-medium text-gray-500 truncate">
-                                                Total de Empréstimos
+                                                Dinheiro na Rua Normal
                                             </dt>
                                             <dd class="flex items-baseline">
                                                 <div class="text-2xl font-semibold text-gray-900">
-                                                    {{ $totalEmprestimos ?? 0 }}
+                                                    R$ {{ number_format($dinheiroNaRuaNormal ?? 0, 2, ',', '.') }}
                                                 </div>
                                             </dd>
                                         </dl>
                                     </div>
                                 </div>
                             </div>
-                            <div class="bg-gray-50 px-5 py-3">
-                                <div class="text-sm">
-                                    <a href="{{ route('emprestimos.index') }}" class="font-medium text-indigo-600 hover:text-indigo-900">
-                                        Ver todos
-                                    </a>
+                        </div>
+
+                        <!-- Juros Mensais a Receber (Normais) -->
+                        <div class="bg-white overflow-hidden shadow rounded-lg">
+                            <div class="p-5">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
+                                        <i class="fas fa-percentage text-white text-2xl"></i>
+                                    </div>
+                                    <div class="ml-5 w-0 flex-1">
+                                        <dl>
+                                            <dt class="text-sm font-medium text-gray-500 truncate">
+                                                Juros Mensais a Receber (Normais)
+                                            </dt>
+                                            <dd class="flex items-baseline">
+                                                <div class="text-2xl font-semibold text-gray-900">
+                                                    R$ {{ number_format($jurosMensaisNormais ?? 0, 2, ',', '.') }}
+                                                </div>
+                                            </dd>
+                                        </dl>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Empréstimos Pendentes -->
+                        <!-- Dinheiro na Rua Atrasado -->
                         <div class="bg-white overflow-hidden shadow rounded-lg">
                             <div class="p-5">
                                 <div class="flex items-center">
-                                    <div class="flex-shrink-0 bg-yellow-500 rounded-md p-3">
+                                    <div class="flex-shrink-0 bg-red-500 rounded-md p-3">
+                                        <i class="fas fa-exclamation-circle text-white text-2xl"></i>
+                                    </div>
+                                    <div class="ml-5 w-0 flex-1">
+                                        <dl>
+                                            <dt class="text-sm font-medium text-gray-500 truncate">
+                                                Dinheiro na Rua Atrasado
+                                            </dt>
+                                            <dd class="flex items-baseline">
+                                                <div class="text-2xl font-semibold text-gray-900">
+                                                    R$ {{ number_format($dinheiroNaRuaAtrasado ?? 0, 2, ',', '.') }}
+                                                </div>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Juros Mensais a Receber (Atrasados) -->
+                        <div class="bg-white overflow-hidden shadow rounded-lg">
+                            <div class="p-5">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 bg-orange-500 rounded-md p-3">
                                         <i class="fas fa-clock text-white text-2xl"></i>
                                     </div>
                                     <div class="ml-5 w-0 flex-1">
                                         <dl>
                                             <dt class="text-sm font-medium text-gray-500 truncate">
-                                                Empréstimos Pendentes
+                                                Juros Mensais a Receber (Atrasados)
                                             </dt>
                                             <dd class="flex items-baseline">
                                                 <div class="text-2xl font-semibold text-gray-900">
-                                                    {{ $emprestimosPendentes ?? 0 }}
+                                                    R$ {{ number_format($jurosMensaisAtrasados ?? 0, 2, ',', '.') }}
                                                 </div>
                                             </dd>
                                         </dl>
                                     </div>
                                 </div>
                             </div>
-                            <div class="bg-gray-50 px-5 py-3">
-                                <div class="text-sm">
-                                    <a href="{{ route('emprestimos.index') }}" class="font-medium text-indigo-600 hover:text-indigo-900">
-                                        Ver todos
-                                    </a>
-                                </div>
-                            </div>
                         </div>
 
-                        <!-- Empréstimos Pagos -->
-                        <div class="bg-white overflow-hidden shadow rounded-lg">
-                            <div class="p-5">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
-                                        <i class="fas fa-check text-white text-2xl"></i>
-                                    </div>
-                                    <div class="ml-5 w-0 flex-1">
-                                        <dl>
-                                            <dt class="text-sm font-medium text-gray-500 truncate">
-                                                Empréstimos Pagos
-                                            </dt>
-                                            <dd class="flex items-baseline">
-                                                <div class="text-2xl font-semibold text-gray-900">
-                                                    {{ $emprestimosPagos ?? 0 }}
-                                                </div>
-                                            </dd>
-                                        </dl>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="bg-gray-50 px-5 py-3">
-                                <div class="text-sm">
-                                    <a href="{{ route('emprestimos.index') }}" class="font-medium text-indigo-600 hover:text-indigo-900">
-                                        Ver todos
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Empréstimos Atrasados -->
+                        <!-- Atrasados -->
                         <div class="bg-white overflow-hidden shadow rounded-lg">
                             <div class="p-5">
                                 <div class="flex items-center">
@@ -116,83 +119,102 @@
                                     <div class="ml-5 w-0 flex-1">
                                         <dl>
                                             <dt class="text-sm font-medium text-gray-500 truncate">
-                                                Empréstimos Atrasados
+                                                Atrasados
                                             </dt>
                                             <dd class="flex items-baseline">
                                                 <div class="text-2xl font-semibold text-gray-900">
-                                                    {{ $emprestimosAtrasados ?? 0 }}
+                                                    {{ $atrasados ?? 0 }}
                                                 </div>
                                             </dd>
                                         </dl>
                                     </div>
                                 </div>
                             </div>
-                            <div class="bg-gray-50 px-5 py-3">
-                                <div class="text-sm">
-                                    <a href="{{ route('emprestimos.index') }}" class="font-medium text-indigo-600 hover:text-indigo-900">
-                                        Ver todos
-                                    </a>
+                        </div>
+
+                        <!-- Contas a receber -->
+                        <div class="bg-white overflow-hidden shadow rounded-lg">
+                            <div class="p-5">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
+                                        <i class="fas fa-hand-holding-usd text-white text-2xl"></i>
+                                    </div>
+                                    <div class="ml-5 w-0 flex-1">
+                                        <dl>
+                                            <dt class="text-sm font-medium text-gray-500 truncate">
+                                                Contas a receber
+                                            </dt>
+                                            <dd class="flex items-baseline">
+                                                <div class="text-2xl font-semibold text-gray-900">
+                                                    R$ {{ number_format($contasAReceber ?? 0, 2, ',', '.') }}
+                                                </div>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contas a pagar -->
+                        <div class="bg-white overflow-hidden shadow rounded-lg">
+                            <div class="p-5">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 bg-red-500 rounded-md p-3">
+                                        <i class="fas fa-file-invoice-dollar text-white text-2xl"></i>
+                                    </div>
+                                    <div class="ml-5 w-0 flex-1">
+                                        <dl>
+                                            <dt class="text-sm font-medium text-gray-500 truncate">
+                                                Contas a pagar
+                                            </dt>
+                                            <dd class="flex items-baseline">
+                                                <div class="text-2xl font-semibold text-gray-900">
+                                                    R$ {{ number_format($contasAPagar ?? 0, 2, ',', '.') }}
+                                                </div>
+                                            </dd>
+                                        </dl>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Últimos Empréstimos -->
-                    <div class="mt-8">
-                        <h3 class="text-lg font-medium text-gray-900 mb-4">
-                            <i class="fas fa-history mr-2 text-indigo-600"></i>
-                            Últimos Empréstimos
-                        </h3>
-                        <div class="bg-white shadow overflow-hidden sm:rounded-md">
-                            <ul class="divide-y divide-gray-200">
-                                @forelse($ultimosEmprestimos ?? [] as $emprestimo)
-                                    <li>
-                                        <a href="{{ route('emprestimos.edit', $emprestimo->id) }}" class="block hover:bg-gray-50">
-                                            <div class="px-4 py-4 sm:px-6">
-                                                <div class="flex items-center justify-between">
-                                                    <div class="flex items-center">
-                                                        <p class="text-sm font-medium text-indigo-600 truncate">
-                                                            {{ $emprestimo->nome }}
-                                                        </p>
-                                                        <div class="ml-2 flex-shrink-0 flex">
-                                                            @if($emprestimo->status == 'pendente')
-                                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                                                    <i class="fas fa-clock mr-1"></i> Pendente
-                                                                </span>
-                                                            @elseif($emprestimo->status == 'pago')
-                                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                                    <i class="fas fa-check mr-1"></i> Pago
-                                                                </span>
-                                                            @else
-                                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                                                    <i class="fas fa-exclamation-triangle mr-1"></i> Atrasado
-                                                                </span>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                    <div class="ml-2 flex-shrink-0 flex">
-                                                        <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
-                                                            R$ {{ number_format($emprestimo->valor, 2, ',', '.') }}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                                <div class="mt-2 sm:flex sm:justify-between">
-                                                    <div class="sm:flex">
-                                                        <p class="flex items-center text-sm text-gray-500">
-                                                            <i class="fas fa-calendar-alt mr-1.5 text-gray-400"></i>
-                                                            {{ $emprestimo->dataPagamento ? $emprestimo->dataPagamento->format('d/m/Y') : 'Não definido' }}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                @empty
-                                    <li class="px-4 py-4 sm:px-6 text-center text-gray-500">
-                                        Nenhum empréstimo encontrado.
-                                    </li>
-                                @endforelse
-                            </ul>
+                    <!-- Gráficos -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Evolução de Empréstimos -->
+                        <div class="bg-white overflow-hidden shadow rounded-lg">
+                            <div class="p-5">
+                                <h3 class="text-lg font-medium text-gray-900 mb-4">
+                                    Evolução de Empréstimos
+                                </h3>
+                                <div style="height: 300px;">
+                                    <canvas id="evolucaoEmprestimos"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Juros Mensais -->
+                        <div class="bg-white overflow-hidden shadow rounded-lg">
+                            <div class="p-5">
+                                <h3 class="text-lg font-medium text-gray-900 mb-4">
+                                    Juros Mensais
+                                </h3>
+                                <div style="height: 300px;">
+                                    <canvas id="jurosMensais"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Status dos Empréstimos -->
+                        <div class="bg-white overflow-hidden shadow rounded-lg">
+                            <div class="p-5">
+                                <h3 class="text-lg font-medium text-gray-900 mb-4">
+                                    Status dos Empréstimos
+                                </h3>
+                                <div style="height: 300px;">
+                                    <canvas id="statusEmprestimos"></canvas>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -200,4 +222,73 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Garantir que o script só rode uma vez
+if (!window.chartsInitialized) {
+    window.chartsInitialized = true;
+
+    // Gráfico de Evolução de Empréstimos
+    new Chart(document.getElementById('evolucaoEmprestimos'), {
+        type: 'line',
+        data: {
+            labels: @json($evolucaoEmprestimos['labels']),
+            datasets: [{
+                label: 'Valor Total',
+                data: @json($evolucaoEmprestimos['data']),
+                borderColor: 'rgb(79, 70, 229)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+
+    // Gráfico de Juros Mensais
+    new Chart(document.getElementById('jurosMensais'), {
+        type: 'bar',
+        data: {
+            labels: @json($jurosMensais['labels']),
+            datasets: [{
+                label: 'Juros',
+                data: @json($jurosMensais['data']),
+                backgroundColor: 'rgb(59, 130, 246)'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+
+    // Gráfico de Status dos Empréstimos
+    new Chart(document.getElementById('statusEmprestimos'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Pendentes', 'Pagos', 'Atrasados'],
+            datasets: [{
+                data: [
+                    {{ $emprestimosPendentes ?? 0 }},
+                    {{ $emprestimosPagos ?? 0 }},
+                    {{ $emprestimosAtrasados ?? 0 }}
+                ],
+                backgroundColor: [
+                    'rgb(234, 179, 8)',
+                    'rgb(34, 197, 94)',
+                    'rgb(239, 68, 68)'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+}
+</script>
+@endpush
 @endsection

@@ -12,7 +12,7 @@ class ContaReceberController extends Controller
      */
     public function index()
     {
-        $contas = ContaReceber::all();
+        $contas = ContaReceber::where('idUsuario', auth()->user()->idUsuario)->get();
         return view('contas-receber.index', compact('contas'));
     }
 
@@ -34,11 +34,13 @@ class ContaReceberController extends Controller
             'tipo' => 'required',
             'valor' => 'required|numeric',
             'data_pagamento' => 'required|date',
-            'status' => 'required',
-            'telefone' => 'nullable'
+            'status' => 'required'
         ]);
 
-        ContaReceber::create($request->all());
+        $data = $request->all();
+        $data['idUsuario'] = auth()->user()->idUsuario;
+
+        ContaReceber::create($data);
 
         return redirect()->route('contas-receber.index')
             ->with('success', 'Conta criada com sucesso.');
@@ -70,8 +72,7 @@ class ContaReceberController extends Controller
             'tipo' => 'required',
             'valor' => 'required|numeric',
             'data_pagamento' => 'required|date',
-            'status' => 'required',
-            'telefone' => 'nullable'
+            'status' => 'required'
         ]);
 
         $contaReceber->update($request->all());

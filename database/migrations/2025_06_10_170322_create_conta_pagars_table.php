@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('conta_pagars', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('idUsuario');
+            $table->foreign('idUsuario')->references('idUsuario')->on('users');
             $table->string('empresa');
             $table->string('tipo');
             $table->decimal('valor', 10, 2);

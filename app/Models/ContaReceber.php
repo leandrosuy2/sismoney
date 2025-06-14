@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ContaReceber extends Model
 {
+    use HasFactory;
+
     protected $table = 'conta_recebers';
     protected $primaryKey = 'id';
     public $timestamps = true;
@@ -16,6 +19,7 @@ class ContaReceber extends Model
         'valor',
         'data_pagamento',
         'status',
-        'telefone'
+        'telefone',
+        'idUsuario'
     ];
 }

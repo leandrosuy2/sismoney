@@ -10,25 +10,22 @@ class Emprestimo extends Model
     use HasFactory;
 
     protected $table = 'emprestimos';
+    public $timestamps = true;
 
     protected $fillable = [
         'nome',
         'valor',
         'juros',
         'valor_jurosdiarios',
-        'meses',
         'dataPagamento',
-        'status',
-        'idUsuario',
-        'telefone'
+        'telefone',
+        'idUsuario'
     ];
 
     protected $casts = [
         'valor' => 'decimal:2',
         'juros' => 'decimal:2',
-        'valor_jurosdiarios' => 'decimal:2',
-        'meses' => 'integer',
-        'dataPagamento' => 'date',
-        'idUsuario' => 'integer'
+        'valor_jurosdiarios' => 'integer',
+        'dataPagamento' => 'date'
     ];
 }
