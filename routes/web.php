@@ -7,6 +7,7 @@ use App\Http\Controllers\EmprestimoController;
 use App\Http\Controllers\ContaPagarController;
 use App\Http\Controllers\ContaReceberController;
 use App\Http\Controllers\EmprestimoUsuarioController;
+use App\Http\Controllers\WhatsAppController;
 
 // Rotas de Autenticação
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -31,6 +32,11 @@ Route::middleware(['auth'])->group(function () {
     // Pagamento e Abatimento de Empréstimos
     Route::post('/emprestimos/{emprestimo}/pagar', [EmprestimoController::class, 'pagar'])->name('emprestimos.pagar');
     Route::post('/emprestimos/{emprestimo}/abater', [EmprestimoController::class, 'abater'])->name('emprestimos.abater');
+
+    // WhatsApp Routes
+    Route::get('/whatsapp', [WhatsAppController::class, 'index'])->name('whatsapp.index');
+    Route::post('/whatsapp/save', [WhatsAppController::class, 'saveConfig'])->name('whatsapp.save');
+    Route::post('/api/whatsapp/test', [WhatsAppController::class, 'test'])->name('whatsapp.test');
 });
 
 // Rotas para acesso dos usuários aos empréstimos

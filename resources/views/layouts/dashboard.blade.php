@@ -132,6 +132,11 @@
                             <i class="fas fa-hand-holding-usd mr-3 {{ request()->routeIs('emprestimos.*') ? 'text-white' : 'text-gray-400 group-hover:text-white' }}"></i>
                             Empréstimos
                         </a>
+                        <a href="{{ route('whatsapp.index') }}"
+                            class="sidebar-item group flex items-center px-2 py-2 text-sm font-medium rounded-md {{ request()->routeIs('whatsapp.*') ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
+                            <i class="fab fa-whatsapp mr-3 {{ request()->routeIs('whatsapp.*') ? 'text-white' : 'text-gray-400 group-hover:text-white' }}"></i>
+                            WhatsApp
+                        </a>
                         <a href="#"
                             class="sidebar-item text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md">
                             <svg class="mr-3 h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24"
