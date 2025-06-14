@@ -28,11 +28,14 @@ class CheckOverdueLoans extends Command
     public function handle()
     {
         $today = Carbon::today();
+        Log::info('Iniciando verificação de empréstimos vencidos', ['data' => $today->format('Y-m-d')]);
 
-        // Busca empréstimos com parcelas vencidas hoje
+        // Busca empréstimos com parcelas vencidas (até hoje)
         $loans = Loan::where('status', 'pendente')
-            ->whereDate('dataPagamento', $today)
+            ->whereDate('dataPagamento', '<=', $today)
             ->get();
+
+        Log::info('Empréstimos vencidos encontrados', ['quantidade' => $loans->count()]);
 
         foreach ($loans as $loan) {
             // Pega o número diretamente da tabela emprestimos
@@ -122,7 +125,7 @@ class CheckOverdueLoans extends Command
 
             $message = "🚨 *ATENÇÃO: PARCELA VENCIDA* 🚨\n\n";
             $message .= "Prezado(a) " . $loan->nome . ",\n\n";
-            $message .= "Informamos que sua parcela venceu hoje, " . Carbon::parse($loan->dataPagamento)->format('d/m/Y') . ".\n\n";
+            $message .= "Informamos que sua parcela venceu em " . Carbon::parse($loan->dataPagamento)->format('d/m/Y') . ".\n\n";
             $message .= "Para regularizar sua situação, realize o pagamento através do PIX:\n";
             $message .= "📱 *Chave PIX:* " . $number . "\n\n";
             $message .= "Após o pagamento, envie o comprovante para este mesmo número.\n\n";
