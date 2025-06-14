@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\CheckOverdueLoans::class,
         Commands\UpdateLoanPhone::class,
+        Commands\CheckOverdueReceivables::class,
     ];
 
     /**
@@ -24,6 +25,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('loans:check-overdue')->dailyAt('09:00');
+        $schedule->command('receivables:check-overdue')->dailyAt('09:00');
     }
 
     /**

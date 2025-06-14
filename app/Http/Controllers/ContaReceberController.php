@@ -57,15 +57,16 @@ class ContaReceberController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ContaReceber $contaReceber)
+    public function edit(string $id)
     {
+        $contaReceber = ContaReceber::findOrFail($id);
         return view('contas-receber.edit', compact('contaReceber'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ContaReceber $contaReceber)
+    public function update(Request $request, string $id)
     {
         $request->validate([
             'empresa' => 'required',
@@ -75,6 +76,7 @@ class ContaReceberController extends Controller
             'status' => 'required'
         ]);
 
+        $contaReceber = ContaReceber::findOrFail($id);
         $contaReceber->update($request->all());
 
         return redirect()->route('contas-receber.index')
@@ -84,8 +86,9 @@ class ContaReceberController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ContaReceber $contaReceber)
+    public function destroy(string $id)
     {
+        $contaReceber = ContaReceber::findOrFail($id);
         $contaReceber->delete();
 
         return redirect()->route('contas-receber.index')

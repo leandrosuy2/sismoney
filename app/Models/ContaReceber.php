@@ -22,4 +22,9 @@ class ContaReceber extends Model
         'telefone',
         'idUsuario'
     ];
+
+    public function cliente()
+    {
+        return $this->belongsTo(Cliente::class, 'idUsuario', 'idUsuario');
+    }
 }

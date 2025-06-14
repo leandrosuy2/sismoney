@@ -20,7 +20,7 @@
                         </a>
                     </div>
 
-                    <form action="{{ route('contas-receber.update', $contaReceber) }}" method="POST" class="space-y-8">
+                    <form action="{{ route('contas-receber.update', $contaReceber->id) }}" method="POST" class="space-y-8">
                         @csrf
                         @method('PUT')
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
