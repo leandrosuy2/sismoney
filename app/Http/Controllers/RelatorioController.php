@@ -12,10 +12,11 @@ class RelatorioController extends Controller
 {
     public function emprestimos(Request $request)
     {
-        $clientes = User::select('idUsuario', 'usuario', 'email')->get();
+        // Buscar nomes distintos da tabela emprestimos
+        $clientes = Emprestimo::select('nome')->distinct()->orderBy('nome')->pluck('nome');
         $query = Emprestimo::query();
         if ($request->filled('cliente')) {
-            $query->where('idUsuario', $request->cliente);
+            $query->where('nome', $request->cliente);
         }
         $emprestimos = $query->orderBy('id', 'desc')->get();
         return view('relatorios.emprestimos', compact('clientes', 'emprestimos'));
@@ -25,10 +26,11 @@ class RelatorioController extends Controller
     {
         Log::info('Iniciando geração do PDF de relatório de empréstimos', ['request' => $request->all()]);
         try {
-            $clientes = User::select('idUsuario', 'usuario', 'email')->get();
+            // Buscar nomes distintos da tabela emprestimos
+            $clientes = Emprestimo::select('nome')->distinct()->orderBy('nome')->pluck('nome');
             $query = Emprestimo::query();
             if ($request->filled('cliente')) {
-                $query->where('idUsuario', $request->cliente);
+                $query->where('nome', $request->cliente);
             }
             $emprestimos = $query->orderBy('id', 'desc')->get();
 

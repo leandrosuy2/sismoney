@@ -22,8 +22,8 @@
                         <select name="cliente" id="cliente" class="w-full border border-gray-300 rounded px-3 py-2">
                             <option value="">Todos</option>
                             @foreach($clientes as $cliente)
-                                <option value="{{ $cliente->idUsuario }}" {{ request('cliente') == $cliente->idUsuario ? 'selected' : '' }}>
-                                    {{ $cliente->usuario ?? $cliente->email }}
+                                <option value="{{ $cliente }}" {{ request('cliente') == $cliente ? 'selected' : '' }}>
+                                    {{ $cliente }}
                                 </option>
                             @endforeach
                         </select>
