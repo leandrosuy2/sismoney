@@ -38,6 +38,7 @@ class EmprestimoController extends Controller
         try {
             $request->validate([
                 'nome' => 'required|string|max:255',
+                'cpf' => 'required|string|max:20',
                 'valor' => 'required|numeric|min:0',
                 'juros' => 'required|numeric|min:0',
                 'valor_jurosdiarios' => 'required|numeric|min:0',
@@ -49,6 +50,7 @@ class EmprestimoController extends Controller
 
             $emprestimo = new Emprestimo();
             $emprestimo->nome = $request->nome;
+            $emprestimo->cpf = $request->cpf;
             $emprestimo->valor = $request->valor;
             $emprestimo->juros = $request->juros;
             $emprestimo->valor_jurosdiarios = $request->valor_jurosdiarios;
@@ -106,6 +108,7 @@ class EmprestimoController extends Controller
 
         $request->validate([
             'nome' => 'required|string|max:255',
+            'cpf' => 'required|string|max:20',
             'valor' => 'required|numeric|min:0',
             'juros' => 'required|numeric|min:0',
             'valor_jurosdiarios' => 'required|numeric|min:0',
@@ -114,6 +117,7 @@ class EmprestimoController extends Controller
         ]);
 
         $emprestimo->nome = $request->nome;
+        $emprestimo->cpf = $request->cpf;
         $emprestimo->valor = $request->valor;
         $emprestimo->juros = $request->juros;
         $emprestimo->valor_jurosdiarios = $request->valor_jurosdiarios;

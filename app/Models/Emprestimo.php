@@ -19,6 +19,7 @@ class Emprestimo extends Model
         'valor_jurosdiarios',
         'dataPagamento',
         'telefone',
+        'cpf',
         'idUsuario',
         'status'
     ];

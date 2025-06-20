@@ -132,20 +132,14 @@
                             <i class="fas fa-hand-holding-usd mr-3 {{ request()->routeIs('emprestimos.*') ? 'text-white' : 'text-gray-400 group-hover:text-white' }}"></i>
                             Empréstimos
                         </a>
+                        @php $isAdmin = Auth::user() && Auth::user()->isAdmin; @endphp
+                        @if($isAdmin)
                         <a href="{{ route('whatsapp.index') }}"
                             class="sidebar-item group flex items-center px-2 py-2 text-sm font-medium rounded-md {{ request()->routeIs('whatsapp.*') ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
                             <i class="fab fa-whatsapp mr-3 {{ request()->routeIs('whatsapp.*') ? 'text-white' : 'text-gray-400 group-hover:text-white' }}"></i>
                             WhatsApp
                         </a>
-                        <a href="#"
-                            class="sidebar-item text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-                            <svg class="mr-3 h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                            </svg>
-                            WhatsApp
-                        </a>
+                        @endif
                         <a href="{{ route('relatorios.emprestimos') }}"
                             class="sidebar-item group flex items-center px-2 py-2 text-sm font-medium rounded-md {{ request()->routeIs('relatorios.emprestimos') ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
                             <svg class="mr-3 h-6 w-6 {{ request()->routeIs('relatorios.emprestimos') ? 'text-white' : 'text-gray-400 group-hover:text-white' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">

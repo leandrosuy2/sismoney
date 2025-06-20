@@ -10,7 +10,10 @@ return new class extends Migration
     {
         Schema::table('emprestimos', function (Blueprint $table) {
             if (!Schema::hasColumn('emprestimos', 'telefone')) {
-                $table->string('telefone')->nullable()->after('status');
+                $table->string('telefone', 20)->nullable()->after('status');
+            }
+            if (!Schema::hasColumn('emprestimos', 'cpf')) {
+                $table->string('cpf', 20)->nullable();
             }
         });
     }
@@ -20,6 +23,9 @@ return new class extends Migration
         Schema::table('emprestimos', function (Blueprint $table) {
             if (Schema::hasColumn('emprestimos', 'telefone')) {
                 $table->dropColumn('telefone');
+            }
+            if (Schema::hasColumn('emprestimos', 'cpf')) {
+                $table->dropColumn('cpf');
             }
         });
     }

@@ -48,6 +48,30 @@
                                 </div>
                             </div>
 
+                            <!-- CPF -->
+                            <div class="space-y-2">
+                                <label for="cpf" class="block text-sm font-medium text-gray-700">
+                                    <i class="fas fa-id-card mr-1 text-indigo-600"></i>
+                                    CPF
+                                </label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <i class="fas fa-id-card text-gray-400"></i>
+                                    </div>
+                                    <input type="text" name="cpf" id="cpf"
+                                           value="{{ old('cpf', $emprestimo->cpf) }}"
+                                           placeholder="Digite o CPF"
+                                           required
+                                           class="block w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200">
+                                    @error('cpf')
+                                        <p class="mt-1 text-sm text-red-600 flex items-center">
+                                            <i class="fas fa-exclamation-circle mr-1"></i>
+                                            {{ $message }}
+                                        </p>
+                                    @enderror
+                                </div>
+                            </div>
+
                             <!-- Valor -->
                             <div class="space-y-2">
                                 <label for="valor" class="block text-sm font-medium text-gray-700">

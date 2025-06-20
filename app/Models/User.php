@@ -33,7 +33,8 @@ class User extends Authenticatable
         'senha',
         'cpfCnpj',
         'telefone',
-        'status'
+        'status',
+        'isAdmin',
     ];
 
     /**
@@ -71,5 +72,6 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'isAdmin' => 'boolean',
     ];
 }
