@@ -9,6 +9,7 @@ use App\Http\Controllers\ContaReceberController;
 use App\Http\Controllers\EmprestimoUsuarioController;
 use App\Http\Controllers\WhatsAppController;
 use App\Http\Controllers\RelatorioController;
+use App\Http\Controllers\PainelEmprestimoUsuarioController;
 
 // Rotas de Autenticação
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -42,6 +43,9 @@ Route::middleware(['auth'])->group(function () {
     // Relatórios
     Route::get('/relatorios/emprestimos', [RelatorioController::class, 'emprestimos'])->name('relatorios.emprestimos');
     Route::get('/relatorios/emprestimos/pdf', [RelatorioController::class, 'pdf'])->name('relatorios.emprestimos.pdf');
+
+    // Emprestimo Usuario
+    Route::get('/emprestimo/usuario', [EmprestimoUsuarioController::class, 'index'])->middleware('auth')->name('emprestimo.usuario.painel');
 });
 
 // Rotas para acesso dos usuários aos empréstimos
@@ -51,3 +55,6 @@ Route::prefix('emprestimos/usuarios')->name('emprestimos.usuario.')->group(funct
     Route::post('logout', [EmprestimoUsuarioController::class, 'logout'])->name('logout');
     Route::get('/', [EmprestimoUsuarioController::class, 'index'])->name('index')->middleware('auth');
 });
+
+// Painel separado para consulta de empréstimos por CPF/telefone
+Route::get('/painel-emprestimo-usuario', [PainelEmprestimoUsuarioController::class, 'index'])->name('painel.emprestimo.usuario');
