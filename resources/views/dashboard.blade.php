@@ -16,8 +16,8 @@
                     </div>
 
                     <!-- Cards -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                        <!-- Dinheiro na Rua Normal -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+                        <!-- Total Emprestado -->
                         <div class="bg-white overflow-hidden shadow rounded-lg">
                             <div class="p-5">
                                 <div class="flex items-center">
@@ -27,11 +27,11 @@
                                     <div class="ml-5 w-0 flex-1">
                                         <dl>
                                             <dt class="text-sm font-medium text-gray-500 truncate">
-                                                Dinheiro na Rua Normal
+                                                Total Emprestado
                                             </dt>
                                             <dd class="flex items-baseline">
                                                 <div class="text-2xl font-semibold text-gray-900">
-                                                    R$ {{ number_format($dinheiroNaRuaNormal ?? 0, 2, ',', '.') }}
+                                                    R$ {{ number_format($totalEmprestado ?? 0, 2, ',', '.') }}
                                                 </div>
                                             </dd>
                                         </dl>
@@ -40,7 +40,7 @@
                             </div>
                         </div>
 
-                        <!-- Juros Mensais a Receber (Normais) -->
+                        <!-- Total de Juros a Receber -->
                         <div class="bg-white overflow-hidden shadow rounded-lg">
                             <div class="p-5">
                                 <div class="flex items-center">
@@ -50,11 +50,34 @@
                                     <div class="ml-5 w-0 flex-1">
                                         <dl>
                                             <dt class="text-sm font-medium text-gray-500 truncate">
-                                                Juros Mensais a Receber (Normais)
+                                                Total de Juros a Receber
                                             </dt>
                                             <dd class="flex items-baseline">
                                                 <div class="text-2xl font-semibold text-gray-900">
-                                                    R$ {{ number_format($jurosMensaisNormais ?? 0, 2, ',', '.') }}
+                                                    R$ {{ number_format($totalJurosReceber ?? 0, 2, ',', '.') }}
+                                                </div>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Total a Receber -->
+                        <div class="bg-white overflow-hidden shadow rounded-lg">
+                            <div class="p-5">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 bg-purple-500 rounded-md p-3">
+                                        <i class="fas fa-hand-holding-usd text-white text-2xl"></i>
+                                    </div>
+                                    <div class="ml-5 w-0 flex-1">
+                                        <dl>
+                                            <dt class="text-sm font-medium text-gray-500 truncate">
+                                                Total a Receber
+                                            </dt>
+                                            <dd class="flex items-baseline">
+                                                <div class="text-2xl font-semibold text-gray-900">
+                                                    R$ {{ number_format($totalAReceber ?? 0, 2, ',', '.') }}
                                                 </div>
                                             </dd>
                                         </dl>
@@ -108,7 +131,10 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
 
+                    <!-- Segunda linha de cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                         <!-- Atrasados -->
                         <div class="bg-white overflow-hidden shadow rounded-lg">
                             <div class="p-5">
@@ -272,9 +298,9 @@ if (!window.chartsInitialized) {
             labels: ['Pendentes', 'Pagos', 'Atrasados'],
             datasets: [{
                 data: [
-                    {{ $emprestimosPendentes ?? 0 }},
+                    {{ $emprestimosPendentesCount ?? 0 }},
                     {{ $emprestimosPagos ?? 0 }},
-                    {{ $emprestimosAtrasados ?? 0 }}
+                    {{ $atrasados ?? 0 }}
                 ],
                 backgroundColor: [
                     'rgb(234, 179, 8)',

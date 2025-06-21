@@ -6,6 +6,7 @@ use App\Models\Emprestimo;
 use App\Models\ContaPagar;
 use App\Models\ContaReceber;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -14,7 +15,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $userId = auth()->user()->idUsuario;
+        $userId = Auth::user()->idUsuario;
         Log::info('Iniciando cálculos do dashboard', ['user_id' => $userId]);
 
         // Atualiza status dos empréstimos para pago se a data de pagamento passou
@@ -24,8 +25,25 @@ class DashboardController extends Controller
                 'data_atual' => Carbon::now()->format('Y-m-d H:i:s')
             ]);
 
+            // Verificar empréstimos pendentes com data passada ANTES da atualização
+            $emprestimosParaAtualizar = Emprestimo::where('status', 'pendente')
+                ->where('idUsuario', $userId)
+                ->where('dataPagamento', '!=', '0000-00-00') // Excluir datas inválidas
+                ->where('dataPagamento', '!=', null) // Excluir datas nulas
+                ->where('dataPagamento', '<', Carbon::now())
+                ->get();
+
+            Log::info('Empréstimos pendentes com data passada (antes da atualização):', [
+                'quantidade' => $emprestimosParaAtualizar->count(),
+                'ids' => $emprestimosParaAtualizar->pluck('id')->toArray(),
+                'datas' => $emprestimosParaAtualizar->pluck('dataPagamento')->toArray(),
+                'valores' => $emprestimosParaAtualizar->pluck('valor')->toArray()
+            ]);
+
             $emprestimos = Emprestimo::where('status', 'pendente')
                 ->where('idUsuario', $userId)
+                ->where('dataPagamento', '!=', '0000-00-00') // Excluir datas inválidas
+                ->where('dataPagamento', '!=', null) // Excluir datas nulas
                 ->where('dataPagamento', '<', Carbon::now())
                 ->get();
 
@@ -57,53 +75,90 @@ class DashboardController extends Controller
             ]);
         }
 
-        // Dinheiro na Rua Normal (todos os empréstimos pendentes)
-        $emprestimosNormais = Emprestimo::where('status', 'pendente')
-            ->where('idUsuario', $userId)
+        // TOTAL DE TODOS OS EMPRÉSTIMOS (pendentes e pagos) - excluindo datas inválidas
+        $todosEmprestimos = Emprestimo::where('idUsuario', $userId)
+            ->where('dataPagamento', '!=', '0000-00-00') // Excluir datas inválidas
+            ->where('dataPagamento', '!=', null) // Excluir datas nulas
             ->get();
 
-        Log::info('Empréstimos normais encontrados:', [
-            'quantidade' => $emprestimosNormais->count(),
-            'ids' => $emprestimosNormais->pluck('id')->toArray(),
-            'valores' => $emprestimosNormais->pluck('valor')->toArray(),
-            'datas' => $emprestimosNormais->pluck('dataPagamento')->toArray()
+        Log::info('Todos os empréstimos encontrados:', [
+            'quantidade' => $todosEmprestimos->count(),
+            'ids' => $todosEmprestimos->pluck('id')->toArray(),
+            'valores' => $todosEmprestimos->pluck('valor')->toArray(),
+            'status' => $todosEmprestimos->pluck('status')->toArray()
         ]);
 
-        $dinheiroNaRuaNormal = $emprestimosNormais->sum('valor');
+        // TOTAL EMPRESTADO (todos os empréstimos - pendentes e pagos)
+        $totalEmprestado = $todosEmprestimos->sum('valor');
+        Log::info('Total emprestado calculado:', ['valor' => $totalEmprestado]);
+
+        // TOTAL DE JUROS A RECEBER (todos os empréstimos)
+        $totalJurosReceber = $todosEmprestimos->sum(function($emprestimo) {
+            return $emprestimo->valor * ($emprestimo->juros / 100);
+        });
+        Log::info('Total de juros a receber calculado:', ['valor' => $totalJurosReceber]);
+
+        // TOTAL A RECEBER (principal + juros)
+        $totalAReceber = $totalEmprestado + $totalJurosReceber;
+        Log::info('Total a receber calculado:', ['valor' => $totalAReceber]);
+
+        // Dinheiro na Rua Normal (TOTAL de todos os empréstimos pendentes) - excluindo datas inválidas
+        $emprestimosPendentes = Emprestimo::where('status', 'pendente')
+            ->where('idUsuario', $userId)
+            ->where('dataPagamento', '!=', '0000-00-00') // Excluir datas inválidas
+            ->where('dataPagamento', '!=', null) // Excluir datas nulas
+            ->get();
+
+        Log::info('Empréstimos pendentes encontrados:', [
+            'quantidade' => $emprestimosPendentes->count(),
+            'ids' => $emprestimosPendentes->pluck('id')->toArray(),
+            'valores' => $emprestimosPendentes->pluck('valor')->toArray(),
+            'datas' => $emprestimosPendentes->pluck('dataPagamento')->toArray()
+        ]);
+
+        $dinheiroNaRuaNormal = $emprestimosPendentes->sum('valor');
         Log::info('Dinheiro na Rua Normal calculado:', ['valor' => $dinheiroNaRuaNormal]);
 
-        // Juros Mensais a Receber (Normais)
-        $jurosMensaisNormais = $emprestimosNormais->sum(function($emprestimo) {
-            return $emprestimo->valor_jurosdiarios * 30;
+        // Juros Mensais a Receber (TOTAL de juros de todos os empréstimos pendentes)
+        $jurosMensaisNormais = $emprestimosPendentes->sum(function($emprestimo) {
+            return $emprestimo->valor * ($emprestimo->juros / 100);
         });
         Log::info('Juros Mensais Normais calculados:', ['valor' => $jurosMensaisNormais]);
 
-        // Dinheiro na Rua Atrasado (empréstimos pendentes com data futura)
-        $query = Emprestimo::where('status', 'pendente')
-            ->where('idUsuario', $userId)
-            ->whereDate('dataPagamento', '>=', Carbon::today());
-
-        Log::info('Query SQL para empréstimos atrasados:', [
-            'sql' => $query->toSql(),
-            'bindings' => $query->getBindings(),
-            'data_atual' => Carbon::today()->toDateString()
-        ]);
-
-        $emprestimosAtrasados = $query->get();
+        // Dinheiro na Rua Atrasado (empréstimos com data passada, independente do status)
+        $emprestimosAtrasados = Emprestimo::where('idUsuario', $userId)
+            ->where('dataPagamento', '!=', '0000-00-00') // Excluir datas inválidas
+            ->where('dataPagamento', '!=', null) // Excluir datas nulas
+            ->whereDate('dataPagamento', '<', Carbon::today())
+            ->get();
 
         Log::info('Empréstimos atrasados encontrados:', [
             'quantidade' => $emprestimosAtrasados->count(),
             'ids' => $emprestimosAtrasados->pluck('id')->toArray(),
             'valores' => $emprestimosAtrasados->pluck('valor')->toArray(),
-            'datas' => $emprestimosAtrasados->pluck('dataPagamento')->toArray()
+            'datas' => $emprestimosAtrasados->pluck('dataPagamento')->toArray(),
+            'status' => $emprestimosAtrasados->pluck('status')->toArray()
+        ]);
+
+        // Verificar TODOS os empréstimos pendentes para debug
+        $todosPendentes = Emprestimo::where('status', 'pendente')
+            ->where('idUsuario', $userId)
+            ->get();
+
+        Log::info('Todos os empréstimos pendentes (para debug):', [
+            'quantidade' => $todosPendentes->count(),
+            'ids' => $todosPendentes->pluck('id')->toArray(),
+            'valores' => $todosPendentes->pluck('valor')->toArray(),
+            'datas' => $todosPendentes->pluck('dataPagamento')->toArray(),
+            'data_atual' => Carbon::today()->format('Y-m-d')
         ]);
 
         $dinheiroNaRuaAtrasado = $emprestimosAtrasados->sum('valor');
         Log::info('Dinheiro na Rua Atrasado calculado:', ['valor' => $dinheiroNaRuaAtrasado]);
 
-        // Juros Mensais a Receber (Atrasados)
+        // Juros Mensais a Receber (Atrasados) - usando valor * (juros / 100)
         $jurosMensaisAtrasados = $emprestimosAtrasados->sum(function($emprestimo) {
-            return $emprestimo->valor_jurosdiarios * 30;
+            return $emprestimo->valor * ($emprestimo->juros / 100);
         });
         Log::info('Juros Mensais Atrasados calculados:', ['valor' => $jurosMensaisAtrasados]);
 
@@ -111,10 +166,8 @@ class DashboardController extends Controller
         $atrasados = $emprestimosAtrasados->count();
         Log::info('Quantidade de atrasados:', ['quantidade' => $atrasados]);
 
-        // Contas a receber
-        $contasAReceber = ContaReceber::where('status', 'pendente')
-            ->where('idUsuario', $userId)
-            ->get();
+        // Contas a receber - removendo filtro de idUsuario pois não existe na tabela
+        $contasAReceber = ContaReceber::where('status', 'pendente')->get();
 
         Log::info('Contas a receber encontradas:', [
             'quantidade' => $contasAReceber->count(),
@@ -125,7 +178,7 @@ class DashboardController extends Controller
         $contasAReceber = $contasAReceber->sum('valor');
         Log::info('Total de contas a receber:', ['valor' => $contasAReceber]);
 
-        // Contas a pagar
+        // Contas a pagar - usando filtro de idUsuario pois existe na tabela
         $contasAPagar = ContaPagar::where('status', 'pendente')
             ->where('idUsuario', $userId)
             ->get();
@@ -140,13 +193,17 @@ class DashboardController extends Controller
         Log::info('Total de contas a pagar:', ['valor' => $contasAPagar]);
 
         // Contagem de empréstimos por status
-        $emprestimosPendentes = Emprestimo::where('status', 'pendente')
+        $emprestimosPendentesCount = Emprestimo::where('status', 'pendente')
             ->where('idUsuario', $userId)
+            ->where('dataPagamento', '!=', '0000-00-00') // Excluir datas inválidas
+            ->where('dataPagamento', '!=', null) // Excluir datas nulas
             ->count();
-        Log::info('Quantidade de empréstimos pendentes:', ['quantidade' => $emprestimosPendentes]);
+        Log::info('Quantidade de empréstimos pendentes:', ['quantidade' => $emprestimosPendentesCount]);
 
         $emprestimosPagos = Emprestimo::where('status', 'pago')
             ->where('idUsuario', $userId)
+            ->where('dataPagamento', '!=', '0000-00-00') // Excluir datas inválidas
+            ->where('dataPagamento', '!=', null) // Excluir datas nulas
             ->count();
         Log::info('Quantidade de empréstimos pagos:', ['quantidade' => $emprestimosPagos]);
 
@@ -159,6 +216,9 @@ class DashboardController extends Controller
         Log::info('Dados para gráfico de juros:', $jurosMensais);
 
         return view('dashboard', compact(
+            'totalEmprestado',
+            'totalJurosReceber',
+            'totalAReceber',
             'dinheiroNaRuaNormal',
             'jurosMensaisNormais',
             'dinheiroNaRuaAtrasado',
@@ -168,7 +228,7 @@ class DashboardController extends Controller
             'contasAPagar',
             'evolucaoEmprestimos',
             'jurosMensais',
-            'emprestimosPendentes',
+            'emprestimosPendentesCount',
             'emprestimosPagos'
         ));
     }
