@@ -10,6 +10,7 @@ use App\Http\Controllers\EmprestimoUsuarioController;
 use App\Http\Controllers\WhatsAppController;
 use App\Http\Controllers\RelatorioController;
 use App\Http\Controllers\PainelEmprestimoUsuarioController;
+use App\Http\Controllers\UserController;
 
 // Rotas de Autenticação
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -30,6 +31,9 @@ Route::middleware(['auth'])->group(function () {
 
     // Contas a Receber
     Route::resource('contas-receber', ContaReceberController::class);
+
+    // Usuários (apenas para admins)
+    Route::resource('users', UserController::class);
 
     // Pagamento e Abatimento de Empréstimos
     Route::post('/emprestimos/{emprestimo}/pagar', [EmprestimoController::class, 'pagar'])->name('emprestimos.pagar');
