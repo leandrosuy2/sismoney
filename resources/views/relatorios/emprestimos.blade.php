@@ -116,6 +116,11 @@
                             </tbody>
                         </table>
                     </div>
+
+                    <!-- Paginação -->
+                    <div class="mt-6">
+                        {{ $emprestimos->appends(request()->query())->links() }}
+                    </div>
                 </div>
             </div>
         </div>
