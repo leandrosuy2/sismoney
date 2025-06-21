@@ -152,6 +152,11 @@
                             </svg>
                             Relatórios
                         </a>
+                        <a href="{{ route('profile.show') }}"
+                            class="sidebar-item group flex items-center px-2 py-2 text-sm font-medium rounded-md {{ request()->routeIs('profile.*') ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
+                            <i class="fas fa-user-circle mr-3 {{ request()->routeIs('profile.*') ? 'text-white' : 'text-gray-400 group-hover:text-white' }}"></i>
+                            Perfil
+                        </a>
                     </nav>
                 </div>
                 <!-- Perfil do Usuário -->

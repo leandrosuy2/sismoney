@@ -11,6 +11,7 @@ use App\Http\Controllers\WhatsAppController;
 use App\Http\Controllers\RelatorioController;
 use App\Http\Controllers\PainelEmprestimoUsuarioController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProfileController;
 
 // Rotas de Autenticação
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -34,6 +35,13 @@ Route::middleware(['auth'])->group(function () {
 
     // Usuários (apenas para admins)
     Route::resource('users', UserController::class);
+
+    // Perfil do usuário (para todos os usuários logados)
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/profile/change-password', [ProfileController::class, 'changePassword'])->name('profile.change-password');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.update-password');
 
     // Pagamento e Abatimento de Empréstimos
     Route::post('/emprestimos/{emprestimo}/pagar', [EmprestimoController::class, 'pagar'])->name('emprestimos.pagar');
