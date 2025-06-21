@@ -33,6 +33,7 @@ class User extends Authenticatable
         'senha',
         'cpfCnpj',
         'telefone',
+        'ativo',
         'status',
         'isAdmin',
     ];
@@ -64,6 +65,7 @@ class User extends Authenticatable
     {
         return [
             'ativo' => 'boolean',
+            'isAdmin' => 'boolean',
             'created_at' => 'datetime',
             'reset_token_expira' => 'datetime',
         ];
