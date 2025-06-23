@@ -132,6 +132,10 @@
                                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                                                     <i class="fas fa-check mr-1"></i> Pago
                                                 </span>
+                                            @elseif(empty($emprestimo->status) || is_null($emprestimo->status))
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                                                    <i class="fas fa-question-circle mr-1"></i> Status não disponível
+                                                </span>
                                             @else
                                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
                                                     <i class="fas fa-exclamation-triangle mr-1"></i> Atrasado

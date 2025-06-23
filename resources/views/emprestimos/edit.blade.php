@@ -158,7 +158,7 @@
                                         <i class="fas fa-calendar text-gray-400"></i>
                                     </div>
                                     <input type="date" name="dataPagamento" id="dataPagamento"
-                                           value="{{ old('dataPagamento', $emprestimo->dataPagamento->format('Y-m-d')) }}"
+                                           value="{{ old('dataPagamento', $emprestimo->dataPagamento ? $emprestimo->dataPagamento->format('Y-m-d') : '') }}"
                                            required
                                            class="block w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200">
                                     @error('dataPagamento')
@@ -182,9 +182,37 @@
                                     </div>
                                     <input type="text" name="telefone" id="telefone"
                                            value="{{ old('telefone', $emprestimo->telefone) }}"
+                                           placeholder="Digite o telefone"
                                            required
                                            class="block w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200">
                                     @error('telefone')
+                                        <p class="mt-1 text-sm text-red-600 flex items-center">
+                                            <i class="fas fa-exclamation-circle mr-1"></i>
+                                            {{ $message }}
+                                        </p>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <!-- Status -->
+                            <div class="space-y-2">
+                                <label for="status" class="block text-sm font-medium text-gray-700">
+                                    <i class="fas fa-info-circle mr-1 text-indigo-600"></i>
+                                    Status
+                                </label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <i class="fas fa-info-circle text-gray-400"></i>
+                                    </div>
+                                    <select name="status" id="status"
+                                            required
+                                            class="block w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200">
+                                        <option value="">Selecione o status</option>
+                                        <option value="pendente" {{ old('status', $emprestimo->status) == 'pendente' ? 'selected' : '' }}>Pendente</option>
+                                        <option value="pago" {{ old('status', $emprestimo->status) == 'pago' ? 'selected' : '' }}>Pago</option>
+                                        <option value="" {{ old('status', $emprestimo->status) === '' ? 'selected' : '' }}>Status não disponível</option>
+                                    </select>
+                                    @error('status')
                                         <p class="mt-1 text-sm text-red-600 flex items-center">
                                             <i class="fas fa-exclamation-circle mr-1"></i>
                                             {{ $message }}
