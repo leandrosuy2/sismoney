@@ -127,7 +127,7 @@ class CheckOverdueLoans extends Command
             $message .= "Prezado(a) " . $loan->nome . ",\n\n";
             $message .= "Informamos que sua parcela venceu em " . Carbon::parse($loan->dataPagamento)->format('d/m/Y') . ".\n\n";
             $message .= "Para regularizar sua situação, realize o pagamento através do PIX:\n";
-            $message .= "📱 *Chave PIX:* " . $number . "\n\n";
+            $message .= "📱 *Chave PIX:* 91980795456\n\n";
             $message .= "Após o pagamento, envie o comprovante para este mesmo número.\n\n";
             $message .= "Agradecemos a atenção.\n";
             $message .= "Equipe Financeira";
