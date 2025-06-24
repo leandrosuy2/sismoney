@@ -11,11 +11,21 @@ class EmprestimoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $emprestimos = Emprestimo::where('idUsuario', auth()->user()->idUsuario)
-            ->orderBy('id', 'desc')
-            ->paginate(10);
+        $query = Emprestimo::where('idUsuario', auth()->user()->idUsuario);
+
+        // Aplicar filtro de pesquisa se fornecido
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('nome', 'like', '%' . $search . '%')
+                  ->orWhere('cpf', 'like', '%' . $search . '%')
+                  ->orWhere('telefone', 'like', '%' . $search . '%');
+            });
+        }
+
+        $emprestimos = $query->orderBy('id', 'desc')->paginate(10);
         return view('emprestimos.index', compact('emprestimos'));
     }
 

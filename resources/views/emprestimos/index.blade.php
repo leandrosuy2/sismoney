@@ -35,7 +35,7 @@
                                         <i class="fas fa-search text-gray-400"></i>
                                     </div>
                                     <input type="text" name="search" value="{{ request('search') }}"
-                                           placeholder="Pesquisar por nome..."
+                                           placeholder="Pesquisar por nome, CPF ou telefone..."
                                            class="block w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200">
                                 </div>
                             </div>
@@ -175,8 +175,15 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="8" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
-                                            Nenhum empréstimo encontrado.
+                                        <td colspan="9" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                                            @if(request('search'))
+                                                Nenhum empréstimo encontrado para "{{ request('search') }}".
+                                                <a href="{{ route('emprestimos.index') }}" class="text-indigo-600 hover:text-indigo-900 ml-2">
+                                                    Ver todos os empréstimos
+                                                </a>
+                                            @else
+                                                Nenhum empréstimo encontrado.
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforelse
