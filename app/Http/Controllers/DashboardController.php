@@ -31,6 +31,7 @@ class DashboardController extends Controller
                 ->where('dataPagamento', '!=', '0000-00-00') // Excluir datas inválidas
                 ->where('dataPagamento', '!=', null) // Excluir datas nulas
                 ->where('dataPagamento', '<', Carbon::now())
+                ->where('updated_at', '<', Carbon::now()->subHours(24)) // Não alterar empréstimos editados nas últimas 24h
                 ->get();
 
             Log::info('Empréstimos pendentes com data passada (antes da atualização):', [
@@ -45,6 +46,7 @@ class DashboardController extends Controller
                 ->where('dataPagamento', '!=', '0000-00-00') // Excluir datas inválidas
                 ->where('dataPagamento', '!=', null) // Excluir datas nulas
                 ->where('dataPagamento', '<', Carbon::now())
+                ->where('updated_at', '<', Carbon::now()->subHours(24)) // Não alterar empréstimos editados nas últimas 24h
                 ->get();
 
             Log::info('Empréstimos encontrados para atualização', [
@@ -57,7 +59,8 @@ class DashboardController extends Controller
                     'id' => $emprestimo->id,
                     'status_atual' => $emprestimo->status,
                     'data_pagamento' => $emprestimo->dataPagamento,
-                    'valor' => $emprestimo->valor
+                    'valor' => $emprestimo->valor,
+                    'ultima_atualizacao' => $emprestimo->updated_at
                 ]);
 
                 // Não altera automaticamente se o valor for 0.00 (pode ser parcialmente pago)
