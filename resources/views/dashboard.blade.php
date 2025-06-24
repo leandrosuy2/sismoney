@@ -16,7 +16,7 @@
                     </div>
 
                     <!-- Cards Principais -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
                         <!-- Total Emprestado -->
                         <div class="bg-green-500 overflow-hidden shadow rounded-lg">
                             <div class="p-4">
@@ -32,29 +32,6 @@
                                             <dd class="flex items-baseline">
                                                 <div class="text-lg font-bold text-white">
                                                     R$ {{ number_format($totalEmprestado ?? 0, 0, ',', '.') }}
-                                                </div>
-                                            </dd>
-                                        </dl>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Total a Receber -->
-                        <div class="bg-blue-500 overflow-hidden shadow rounded-lg">
-                            <div class="p-4">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0 bg-white bg-opacity-20 rounded-md p-2">
-                                        <i class="fas fa-hand-holding-usd text-white text-xl"></i>
-                                    </div>
-                                    <div class="ml-3 w-0 flex-1">
-                                        <dl>
-                                            <dt class="text-xs font-medium text-white opacity-90 truncate">
-                                                Total a Receber
-                                            </dt>
-                                            <dd class="flex items-baseline">
-                                                <div class="text-lg font-bold text-white">
-                                                    R$ {{ number_format($totalAReceber ?? 0, 0, ',', '.') }}
                                                 </div>
                                             </dd>
                                         </dl>
