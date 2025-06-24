@@ -15,46 +15,23 @@
                         </h2>
                     </div>
 
-                    <!-- Cards -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+                    <!-- Cards Principais -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                         <!-- Total Emprestado -->
-                        <div class="bg-white overflow-hidden shadow rounded-lg">
-                            <div class="p-5">
+                        <div class="bg-green-500 overflow-hidden shadow rounded-lg">
+                            <div class="p-4">
                                 <div class="flex items-center">
-                                    <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
-                                        <i class="fas fa-money-bill-wave text-white text-2xl"></i>
+                                    <div class="flex-shrink-0 bg-white bg-opacity-20 rounded-md p-2">
+                                        <i class="fas fa-money-bill-wave text-white text-xl"></i>
                                     </div>
-                                    <div class="ml-5 w-0 flex-1">
+                                    <div class="ml-3 w-0 flex-1">
                                         <dl>
-                                            <dt class="text-sm font-medium text-gray-500 truncate">
+                                            <dt class="text-xs font-medium text-white opacity-90 truncate">
                                                 Total Emprestado
                                             </dt>
                                             <dd class="flex items-baseline">
-                                                <div class="text-2xl font-semibold text-gray-900">
-                                                    R$ {{ number_format($totalEmprestado ?? 0, 2, ',', '.') }}
-                                                </div>
-                                            </dd>
-                                        </dl>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Total de Juros a Receber -->
-                        <div class="bg-white overflow-hidden shadow rounded-lg">
-                            <div class="p-5">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
-                                        <i class="fas fa-percentage text-white text-2xl"></i>
-                                    </div>
-                                    <div class="ml-5 w-0 flex-1">
-                                        <dl>
-                                            <dt class="text-sm font-medium text-gray-500 truncate">
-                                                Total de Juros a Receber
-                                            </dt>
-                                            <dd class="flex items-baseline">
-                                                <div class="text-2xl font-semibold text-gray-900">
-                                                    R$ {{ number_format($totalJurosReceber ?? 0, 2, ',', '.') }}
+                                                <div class="text-lg font-bold text-white">
+                                                    R$ {{ number_format($totalEmprestado ?? 0, 0, ',', '.') }}
                                                 </div>
                                             </dd>
                                         </dl>
@@ -64,20 +41,20 @@
                         </div>
 
                         <!-- Total a Receber -->
-                        <div class="bg-white overflow-hidden shadow rounded-lg">
-                            <div class="p-5">
+                        <div class="bg-blue-500 overflow-hidden shadow rounded-lg">
+                            <div class="p-4">
                                 <div class="flex items-center">
-                                    <div class="flex-shrink-0 bg-purple-500 rounded-md p-3">
-                                        <i class="fas fa-hand-holding-usd text-white text-2xl"></i>
+                                    <div class="flex-shrink-0 bg-white bg-opacity-20 rounded-md p-2">
+                                        <i class="fas fa-hand-holding-usd text-white text-xl"></i>
                                     </div>
-                                    <div class="ml-5 w-0 flex-1">
+                                    <div class="ml-3 w-0 flex-1">
                                         <dl>
-                                            <dt class="text-sm font-medium text-gray-500 truncate">
+                                            <dt class="text-xs font-medium text-white opacity-90 truncate">
                                                 Total a Receber
                                             </dt>
                                             <dd class="flex items-baseline">
-                                                <div class="text-2xl font-semibold text-gray-900">
-                                                    R$ {{ number_format($totalAReceber ?? 0, 2, ',', '.') }}
+                                                <div class="text-lg font-bold text-white">
+                                                    R$ {{ number_format($totalAReceber ?? 0, 0, ',', '.') }}
                                                 </div>
                                             </dd>
                                         </dl>
@@ -87,20 +64,20 @@
                         </div>
 
                         <!-- Dinheiro na Rua Atrasado -->
-                        <div class="bg-white overflow-hidden shadow rounded-lg">
-                            <div class="p-5">
+                        <div class="bg-red-500 overflow-hidden shadow rounded-lg">
+                            <div class="p-4">
                                 <div class="flex items-center">
-                                    <div class="flex-shrink-0 bg-red-500 rounded-md p-3">
-                                        <i class="fas fa-exclamation-circle text-white text-2xl"></i>
+                                    <div class="flex-shrink-0 bg-white bg-opacity-20 rounded-md p-2">
+                                        <i class="fas fa-exclamation-circle text-white text-xl"></i>
                                     </div>
-                                    <div class="ml-5 w-0 flex-1">
+                                    <div class="ml-3 w-0 flex-1">
                                         <dl>
-                                            <dt class="text-sm font-medium text-gray-500 truncate">
-                                                Dinheiro na Rua Atrasado
+                                            <dt class="text-xs font-medium text-white opacity-90 truncate">
+                                                Dinheiro Atrasado
                                             </dt>
                                             <dd class="flex items-baseline">
-                                                <div class="text-2xl font-semibold text-gray-900">
-                                                    R$ {{ number_format($dinheiroNaRuaAtrasado ?? 0, 2, ',', '.') }}
+                                                <div class="text-lg font-bold text-white">
+                                                    R$ {{ number_format($dinheiroNaRuaAtrasado ?? 0, 0, ',', '.') }}
                                                 </div>
                                             </dd>
                                         </dl>
@@ -109,21 +86,21 @@
                             </div>
                         </div>
 
-                        <!-- Juros Mensais a Receber (Atrasados) -->
-                        <div class="bg-white overflow-hidden shadow rounded-lg">
-                            <div class="p-5">
+                        <!-- Atrasados -->
+                        <div class="bg-orange-500 overflow-hidden shadow rounded-lg">
+                            <div class="p-4">
                                 <div class="flex items-center">
-                                    <div class="flex-shrink-0 bg-orange-500 rounded-md p-3">
-                                        <i class="fas fa-clock text-white text-2xl"></i>
+                                    <div class="flex-shrink-0 bg-white bg-opacity-20 rounded-md p-2">
+                                        <i class="fas fa-exclamation-triangle text-white text-xl"></i>
                                     </div>
-                                    <div class="ml-5 w-0 flex-1">
+                                    <div class="ml-3 w-0 flex-1">
                                         <dl>
-                                            <dt class="text-sm font-medium text-gray-500 truncate">
-                                                Juros Mensais a Receber (Atrasados)
+                                            <dt class="text-xs font-medium text-white opacity-90 truncate">
+                                                Atrasados
                                             </dt>
                                             <dd class="flex items-baseline">
-                                                <div class="text-2xl font-semibold text-gray-900">
-                                                    R$ {{ number_format($jurosMensaisAtrasados ?? 0, 2, ',', '.') }}
+                                                <div class="text-lg font-bold text-white">
+                                                    {{ $atrasados ?? 0 }}
                                                 </div>
                                             </dd>
                                         </dl>
@@ -133,23 +110,46 @@
                         </div>
                     </div>
 
-                    <!-- Segunda linha de cards -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                        <!-- Atrasados -->
-                        <div class="bg-white overflow-hidden shadow rounded-lg">
-                            <div class="p-5">
+                    <!-- Cards Secundários -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                        <!-- Total de Juros a Receber -->
+                        <div class="bg-white overflow-hidden shadow rounded-lg border-l-4 border-blue-500">
+                            <div class="p-4">
                                 <div class="flex items-center">
-                                    <div class="flex-shrink-0 bg-red-500 rounded-md p-3">
-                                        <i class="fas fa-exclamation-triangle text-white text-2xl"></i>
+                                    <div class="flex-shrink-0 bg-blue-100 rounded-md p-2">
+                                        <i class="fas fa-percentage text-blue-600 text-lg"></i>
                                     </div>
-                                    <div class="ml-5 w-0 flex-1">
+                                    <div class="ml-3 w-0 flex-1">
                                         <dl>
                                             <dt class="text-sm font-medium text-gray-500 truncate">
-                                                Atrasados
+                                                Juros a Receber
                                             </dt>
                                             <dd class="flex items-baseline">
-                                                <div class="text-2xl font-semibold text-gray-900">
-                                                    {{ $atrasados ?? 0 }}
+                                                <div class="text-lg font-semibold text-gray-900">
+                                                    R$ {{ number_format($totalJurosReceber ?? 0, 0, ',', '.') }}
+                                                </div>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Juros Mensais a Receber (Atrasados) -->
+                        <div class="bg-white overflow-hidden shadow rounded-lg border-l-4 border-orange-500">
+                            <div class="p-4">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 bg-orange-100 rounded-md p-2">
+                                        <i class="fas fa-clock text-orange-600 text-lg"></i>
+                                    </div>
+                                    <div class="ml-3 w-0 flex-1">
+                                        <dl>
+                                            <dt class="text-sm font-medium text-gray-500 truncate">
+                                                Juros Atrasados
+                                            </dt>
+                                            <dd class="flex items-baseline">
+                                                <div class="text-lg font-semibold text-gray-900">
+                                                    R$ {{ number_format($jurosMensaisAtrasados ?? 0, 0, ',', '.') }}
                                                 </div>
                                             </dd>
                                         </dl>
@@ -159,20 +159,46 @@
                         </div>
 
                         <!-- Contas a receber -->
-                        <div class="bg-white overflow-hidden shadow rounded-lg">
-                            <div class="p-5">
+                        <div class="bg-white overflow-hidden shadow rounded-lg border-l-4 border-green-500">
+                            <div class="p-4">
                                 <div class="flex items-center">
-                                    <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
-                                        <i class="fas fa-hand-holding-usd text-white text-2xl"></i>
+                                    <div class="flex-shrink-0 bg-green-100 rounded-md p-2">
+                                        <i class="fas fa-hand-holding-usd text-green-600 text-lg"></i>
                                     </div>
-                                    <div class="ml-5 w-0 flex-1">
+                                    <div class="ml-3 w-0 flex-1">
                                         <dl>
                                             <dt class="text-sm font-medium text-gray-500 truncate">
-                                                Contas a receber
+                                                Contas a Receber
                                             </dt>
                                             <dd class="flex items-baseline">
-                                                <div class="text-2xl font-semibold text-gray-900">
-                                                    R$ {{ number_format($contasAReceber ?? 0, 2, ',', '.') }}
+                                                <div class="text-lg font-semibold text-gray-900">
+                                                    R$ {{ number_format($contasAReceber ?? 0, 0, ',', '.') }}
+                                                </div>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cards Terciários -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <!-- Contas a pagar -->
+                        <div class="bg-white overflow-hidden shadow rounded-lg border-l-4 border-red-500">
+                            <div class="p-4">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 bg-red-100 rounded-md p-2">
+                                        <i class="fas fa-file-invoice-dollar text-red-600 text-lg"></i>
+                                    </div>
+                                    <div class="ml-3 w-0 flex-1">
+                                        <dl>
+                                            <dt class="text-sm font-medium text-gray-500 truncate">
+                                                Contas a Pagar
+                                            </dt>
+                                            <dd class="flex items-baseline">
+                                                <div class="text-lg font-semibold text-gray-900">
+                                                    R$ {{ number_format($contasAPagar ?? 0, 0, ',', '.') }}
                                                 </div>
                                             </dd>
                                         </dl>
@@ -181,21 +207,21 @@
                             </div>
                         </div>
 
-                        <!-- Contas a pagar -->
-                        <div class="bg-white overflow-hidden shadow rounded-lg">
-                            <div class="p-5">
+                        <!-- Saldo -->
+                        <div class="bg-white overflow-hidden shadow rounded-lg border-l-4 border-purple-500">
+                            <div class="p-4">
                                 <div class="flex items-center">
-                                    <div class="flex-shrink-0 bg-red-500 rounded-md p-3">
-                                        <i class="fas fa-file-invoice-dollar text-white text-2xl"></i>
+                                    <div class="flex-shrink-0 bg-purple-100 rounded-md p-2">
+                                        <i class="fas fa-balance-scale text-purple-600 text-lg"></i>
                                     </div>
-                                    <div class="ml-5 w-0 flex-1">
+                                    <div class="ml-3 w-0 flex-1">
                                         <dl>
                                             <dt class="text-sm font-medium text-gray-500 truncate">
-                                                Contas a pagar
+                                                Saldo
                                             </dt>
                                             <dd class="flex items-baseline">
-                                                <div class="text-2xl font-semibold text-gray-900">
-                                                    R$ {{ number_format($contasAPagar ?? 0, 2, ',', '.') }}
+                                                <div class="text-lg font-semibold text-gray-900">
+                                                    R$ {{ number_format(($contasAReceber ?? 0) - ($contasAPagar ?? 0), 0, ',', '.') }}
                                                 </div>
                                             </dd>
                                         </dl>
@@ -206,14 +232,15 @@
                     </div>
 
                     <!-- Gráficos -->
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
                         <!-- Evolução de Empréstimos -->
                         <div class="bg-white overflow-hidden shadow rounded-lg">
-                            <div class="p-5">
-                                <h3 class="text-lg font-medium text-gray-900 mb-4">
+                            <div class="p-4">
+                                <h3 class="text-base font-medium text-gray-900 mb-3 flex items-center">
+                                    <i class="fas fa-chart-line text-indigo-600 mr-2"></i>
                                     Evolução de Empréstimos
                                 </h3>
-                                <div style="height: 300px;">
+                                <div style="height: 250px;">
                                     <canvas id="evolucaoEmprestimos"></canvas>
                                 </div>
                             </div>
@@ -221,11 +248,12 @@
 
                         <!-- Juros Mensais -->
                         <div class="bg-white overflow-hidden shadow rounded-lg">
-                            <div class="p-5">
-                                <h3 class="text-lg font-medium text-gray-900 mb-4">
+                            <div class="p-4">
+                                <h3 class="text-base font-medium text-gray-900 mb-3 flex items-center">
+                                    <i class="fas fa-chart-bar text-blue-600 mr-2"></i>
                                     Juros Mensais
                                 </h3>
-                                <div style="height: 300px;">
+                                <div style="height: 250px;">
                                     <canvas id="jurosMensais"></canvas>
                                 </div>
                             </div>
@@ -233,11 +261,12 @@
 
                         <!-- Status dos Empréstimos -->
                         <div class="bg-white overflow-hidden shadow rounded-lg">
-                            <div class="p-5">
-                                <h3 class="text-lg font-medium text-gray-900 mb-4">
+                            <div class="p-4">
+                                <h3 class="text-base font-medium text-gray-900 mb-3 flex items-center">
+                                    <i class="fas fa-chart-pie text-green-600 mr-2"></i>
                                     Status dos Empréstimos
                                 </h3>
-                                <div style="height: 300px;">
+                                <div style="height: 250px;">
                                     <canvas id="statusEmprestimos"></canvas>
                                 </div>
                             </div>
