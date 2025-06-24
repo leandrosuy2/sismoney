@@ -54,12 +54,6 @@
                 <div class="lg:hidden text-center mb-8">
                     <i class="fas fa-hand-holding-usd text-4xl text-green-600 mb-2"></i>
                     <h1 class="text-2xl font-bold text-gray-900">SISMoney</h1>
-
-                    <!-- Botão de instalação PWA (apenas mobile) -->
-                    <button id="install-pwa-btn" class="mt-4 bg-indigo-600 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-indigo-700 transition-colors duration-200 hidden">
-                        <i class="fas fa-download mr-2"></i>
-                        Instalar App
-                    </button>
                 </div>
 
                 <div class="bg-white rounded-2xl shadow-xl p-8">
@@ -139,36 +133,84 @@
         </div>
     </div>
 
+    <!-- Botão flutuante de instalação PWA -->
+    <div id="pwa-install-banner" class="fixed bottom-4 left-4 right-4 bg-indigo-600 text-white p-4 rounded-lg shadow-lg z-50">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center">
+                <i class="fas fa-download mr-3 text-xl"></i>
+                <div>
+                    <p class="font-semibold">Instalar SisMoney</p>
+                    <p class="text-sm opacity-90">Acesse mais rápido como app</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2">
+                <button id="install-pwa-btn-banner" class="bg-white text-indigo-600 px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors">
+                    Instalar
+                </button>
+                <button id="close-pwa-banner" class="text-white hover:text-gray-200 transition-colors">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- PWA Script -->
     <script>
-        // Verificar se é mobile
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        // Forçar mostrar o botão (teste)
+        console.log('Script PWA carregado');
 
-        if (isMobile) {
-            // Registrar Service Worker
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/sw.js')
-                    .then((registration) => {
-                        console.log('Service Worker registrado:', registration.scope);
-                    })
-                    .catch((error) => {
-                        console.log('Erro no Service Worker:', error);
-                    });
+        // Verificar se é mobile de forma mais simples
+        const isMobile = window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        console.log('É mobile?', isMobile);
+        console.log('User Agent:', navigator.userAgent);
+
+        // Controlar banner flutuante
+        const pwaBanner = document.getElementById('pwa-install-banner');
+        const installBtn = document.getElementById('install-pwa-btn-banner');
+        const closeBtn = document.getElementById('close-pwa-banner');
+
+        if (pwaBanner && installBtn && closeBtn) {
+            console.log('Banner encontrado, configurando...');
+
+            // Botão de instalar
+            installBtn.addEventListener('click', () => {
+                console.log('Botão instalar clicado');
+                if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                    alert('Para instalar no iPhone/iPad:\n\n1. Toque no botão de compartilhar (quadrado com seta)\n2. Selecione "Adicionar à Tela de Início"\n3. Toque em "Adicionar"');
+                } else {
+                    alert('Para instalar no Android:\n\n1. Toque no menu (3 pontos)\n2. Selecione "Adicionar à tela inicial"\n3. Confirme a instalação');
+                }
+            });
+
+            // Botão de fechar
+            closeBtn.addEventListener('click', () => {
+                console.log('Fechando banner');
+                pwaBanner.style.display = 'none';
+                // Salvar no localStorage para não mostrar novamente
+                localStorage.setItem('pwa-banner-closed', 'true');
+            });
+
+            // Mostrar banner sempre em mobile (removendo verificação do localStorage)
+            if (isMobile) {
+                pwaBanner.style.display = 'block';
+                console.log('Banner mostrado para mobile');
+            } else {
+                pwaBanner.style.display = 'none';
+                console.log('Banner escondido para desktop');
             }
+        } else {
+            console.log('Banner NÃO encontrado!');
+        }
 
-            // Mostrar botão de instalação
-            const installBtn = document.getElementById('install-pwa-btn');
-            if (installBtn) {
-                installBtn.classList.remove('hidden');
-
-                installBtn.addEventListener('click', () => {
-                    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-                        alert('Para instalar no iPhone/iPad:\n\n1. Toque no botão de compartilhar (quadrado com seta)\n2. Selecione "Adicionar à Tela de Início"\n3. Toque em "Adicionar"');
-                    } else {
-                        alert('Para instalar no Android:\n\n1. Toque no menu (3 pontos)\n2. Selecione "Adicionar à tela inicial"\n3. Confirme a instalação');
-                    }
+        // Registrar Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+                .then((registration) => {
+                    console.log('Service Worker registrado:', registration.scope);
+                })
+                .catch((error) => {
+                    console.log('Erro no Service Worker:', error);
                 });
-            }
         }
     </script>
 </body>
