@@ -210,6 +210,7 @@
                                         <option value="">Selecione o status</option>
                                         <option value="pendente" {{ old('status', $emprestimo->status) == 'pendente' ? 'selected' : '' }}>Pendente</option>
                                         <option value="pago" {{ old('status', $emprestimo->status) == 'pago' ? 'selected' : '' }}>Pago</option>
+                                        <option value="parcela abatida" {{ old('status', $emprestimo->status) == 'parcela abatida' ? 'selected' : '' }}>Parcela Abatida</option>
                                         <option value="" {{ old('status', $emprestimo->status) === '' ? 'selected' : '' }}>Status não disponível</option>
                                     </select>
                                     @error('status')

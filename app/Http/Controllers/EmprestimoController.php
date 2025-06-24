@@ -44,7 +44,7 @@ class EmprestimoController extends Controller
                 'valor_jurosdiarios' => 'required|numeric|min:0',
                 'dataPagamento' => 'required|date',
                 'telefone' => 'required|string|max:150',
-                'status' => 'nullable|in:pendente,pago,'
+                'status' => 'nullable|in:pendente,pago,parcela abatida,'
             ]);
 
             Log::info('Validação passou com sucesso');
@@ -115,7 +115,7 @@ class EmprestimoController extends Controller
             'valor_jurosdiarios' => 'required|numeric|min:0',
             'dataPagamento' => 'required|date',
             'telefone' => 'required|string|max:150',
-            'status' => 'nullable|in:pendente,pago,'
+            'status' => 'nullable|in:pendente,pago,parcela abatida,'
         ]);
 
         $emprestimo->nome = $request->nome;
@@ -276,7 +276,8 @@ class EmprestimoController extends Controller
 
             // Atualiza o empréstimo
             $dadosAtualizacao = [
-                'dataPagamento' => $proximaData->format('Y-m-d')
+                'dataPagamento' => $proximaData->format('Y-m-d'),
+                'status' => 'parcela abatida'
             ];
 
             Log::info('Dados para atualização', $dadosAtualizacao);
@@ -285,7 +286,8 @@ class EmprestimoController extends Controller
 
             Log::info('Juros marcados como pagos com sucesso', [
                 'emprestimo_id' => $emprestimo->id,
-                'nova_data_pagamento' => $proximaData->format('Y-m-d')
+                'nova_data_pagamento' => $proximaData->format('Y-m-d'),
+                'novo_status' => 'parcela abatida'
             ]);
 
             return redirect()->route('emprestimos.index')

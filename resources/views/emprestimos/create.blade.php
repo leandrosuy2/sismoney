@@ -209,6 +209,7 @@
                                         <option value="">Selecione o status</option>
                                         <option value="pendente" {{ old('status') == 'pendente' ? 'selected' : '' }}>Pendente</option>
                                         <option value="pago" {{ old('status') == 'pago' ? 'selected' : '' }}>Pago</option>
+                                        <option value="parcela abatida" {{ old('status') == 'parcela abatida' ? 'selected' : '' }}>Parcela Abatida</option>
                                         <option value="" {{ old('status') === '' ? 'selected' : '' }}>Status não disponível</option>
                                     </select>
                                     @error('status')

@@ -132,6 +132,10 @@
                                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                                                     <i class="fas fa-check mr-1"></i> Pago
                                                 </span>
+                                            @elseif($emprestimo->status == 'parcela abatida')
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                    <i class="fas fa-hand-holding-usd mr-1"></i> Parcela Abatida
+                                                </span>
                                             @elseif(empty($emprestimo->status) || is_null($emprestimo->status))
                                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
                                                     <i class="fas fa-question-circle mr-1"></i> Status não disponível
