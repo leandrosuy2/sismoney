@@ -56,15 +56,25 @@ class DashboardController extends Controller
                 Log::info('Tentando atualizar empréstimo', [
                     'id' => $emprestimo->id,
                     'status_atual' => $emprestimo->status,
-                    'data_pagamento' => $emprestimo->dataPagamento
+                    'data_pagamento' => $emprestimo->dataPagamento,
+                    'valor' => $emprestimo->valor
                 ]);
 
-                DB::statement("UPDATE emprestimos SET status = 'pago' WHERE id = ?", [$emprestimo->id]);
+                // Não altera automaticamente se o valor for 0.00 (pode ser parcialmente pago)
+                if ($emprestimo->valor > 0) {
+                    DB::statement("UPDATE emprestimos SET status = 'pago' WHERE id = ?", [$emprestimo->id]);
 
-                Log::info('Empréstimo atualizado com sucesso', [
-                    'id' => $emprestimo->id,
-                    'novo_status' => 'pago'
-                ]);
+                    Log::info('Empréstimo atualizado com sucesso', [
+                        'id' => $emprestimo->id,
+                        'novo_status' => 'pago'
+                    ]);
+                } else {
+                    Log::info('Empréstimo com valor 0.00 - não alterando status automaticamente', [
+                        'id' => $emprestimo->id,
+                        'valor' => $emprestimo->valor,
+                        'status_atual' => $emprestimo->status
+                    ]);
+                }
             }
         } catch (\Exception $e) {
             Log::error('Erro ao atualizar status dos empréstimos', [

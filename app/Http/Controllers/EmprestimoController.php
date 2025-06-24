@@ -54,7 +54,7 @@ class EmprestimoController extends Controller
                 'valor_jurosdiarios' => 'required|numeric|min:0',
                 'dataPagamento' => 'required|date',
                 'telefone' => 'required|string|max:150',
-                'status' => 'nullable|in:pendente,pago,parcela abatida,'
+                'status' => 'nullable|in:pendente,pago,parcela abatida'
             ]);
 
             Log::info('Validação passou com sucesso');
@@ -67,8 +67,7 @@ class EmprestimoController extends Controller
             $emprestimo->valor_jurosdiarios = $request->valor_jurosdiarios;
             $emprestimo->dataPagamento = $request->dataPagamento;
             $emprestimo->telefone = $request->telefone;
-            $emprestimo->meses = 0;
-            $emprestimo->status = $request->status;
+            $emprestimo->status = $request->status ?? null;
             $emprestimo->idUsuario = auth()->user()->idUsuario;
 
             Log::info('Modelo criado:', $emprestimo->toArray());
@@ -117,6 +116,12 @@ class EmprestimoController extends Controller
                 ->with('error', 'Você não tem permissão para atualizar este empréstimo.');
         }
 
+        Log::info('Iniciando atualização de empréstimo', [
+            'emprestimo_id' => $emprestimo->id,
+            'dados_recebidos' => $request->all(),
+            'status_atual' => $emprestimo->status
+        ]);
+
         $request->validate([
             'nome' => 'required|string|max:255',
             'cpf' => 'required|string|max:20',
@@ -125,7 +130,14 @@ class EmprestimoController extends Controller
             'valor_jurosdiarios' => 'required|numeric|min:0',
             'dataPagamento' => 'required|date',
             'telefone' => 'required|string|max:150',
-            'status' => 'nullable|in:pendente,pago,parcela abatida,'
+            'status' => 'nullable|in:pendente,pago,parcela abatida'
+        ]);
+
+        Log::info('Validação passou, status recebido:', [
+            'status_recebido' => $request->status,
+            'tipo_status' => gettype($request->status),
+            'status_vazio' => empty($request->status),
+            'status_null' => is_null($request->status)
         ]);
 
         $emprestimo->nome = $request->nome;
@@ -135,10 +147,25 @@ class EmprestimoController extends Controller
         $emprestimo->valor_jurosdiarios = $request->valor_jurosdiarios;
         $emprestimo->dataPagamento = $request->dataPagamento;
         $emprestimo->telefone = $request->telefone;
-        $emprestimo->meses = 0;
-        $emprestimo->status = $request->status;
+
+        // Tratamento específico para o status no servidor
+        $status = $request->status;
+        if (empty($status) || $status === '') {
+            $status = null;
+        }
+        $emprestimo->status = $status;
+
+        Log::info('Dados antes de salvar:', [
+            'status_para_salvar' => $emprestimo->status,
+            'todos_os_dados' => $emprestimo->toArray()
+        ]);
 
         $emprestimo->save();
+
+        Log::info('Empréstimo atualizado com sucesso', [
+            'emprestimo_id' => $emprestimo->id,
+            'status_final' => $emprestimo->status
+        ]);
 
         return redirect()->route('emprestimos.index')
             ->with('success', 'Empréstimo atualizado com sucesso!');

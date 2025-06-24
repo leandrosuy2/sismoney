@@ -205,13 +205,11 @@
                                         <i class="fas fa-info-circle text-gray-400"></i>
                                     </div>
                                     <select name="status" id="status"
-                                            required
                                             class="block w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200">
                                         <option value="">Selecione o status</option>
                                         <option value="pendente" {{ old('status', $emprestimo->status) == 'pendente' ? 'selected' : '' }}>Pendente</option>
                                         <option value="pago" {{ old('status', $emprestimo->status) == 'pago' ? 'selected' : '' }}>Pago</option>
                                         <option value="parcela abatida" {{ old('status', $emprestimo->status) == 'parcela abatida' ? 'selected' : '' }}>Parcela Abatida</option>
-                                        <option value="" {{ old('status', $emprestimo->status) === '' ? 'selected' : '' }}>Status não disponível</option>
                                     </select>
                                     @error('status')
                                         <p class="mt-1 text-sm text-red-600 flex items-center">
