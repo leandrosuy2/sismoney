@@ -58,6 +58,9 @@ Route::middleware(['auth'])->group(function () {
 
     // Emprestimo Usuario
     Route::get('/emprestimo/usuario', [EmprestimoUsuarioController::class, 'index'])->middleware('auth')->name('emprestimo.usuario.painel');
+
+    // PDF dos empréstimos atrasados
+    Route::get('/emprestimos/atrasados/pdf', [DashboardController::class, 'pdfAtrasados'])->name('emprestimos.atrasados.pdf');
 });
 
 // Rotas para acesso dos usuários aos empréstimos

@@ -64,7 +64,7 @@
                         </div>
 
                         <!-- Atrasados -->
-                        <div class="bg-orange-500 overflow-hidden shadow rounded-lg">
+                        <div class="bg-orange-500 overflow-hidden shadow rounded-lg cursor-pointer hover:bg-orange-600 transition-colors duration-200" onclick="openAtrasadosModal()">
                             <div class="p-4">
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0 bg-white bg-opacity-20 rounded-md p-2">
@@ -160,7 +160,7 @@
                     </div>
 
                     <!-- Cards Terciários -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="grid grid-cols-1 gap-4 mb-6">
                         <!-- Contas a pagar -->
                         <div class="bg-white overflow-hidden shadow rounded-lg border-l-4 border-red-500">
                             <div class="p-4">
@@ -176,29 +176,6 @@
                                             <dd class="flex items-baseline">
                                                 <div class="text-lg font-semibold text-gray-900">
                                                     R$ {{ number_format($contasAPagar ?? 0, 0, ',', '.') }}
-                                                </div>
-                                            </dd>
-                                        </dl>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Saldo -->
-                        <div class="bg-white overflow-hidden shadow rounded-lg border-l-4 border-purple-500">
-                            <div class="p-4">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0 bg-purple-100 rounded-md p-2">
-                                        <i class="fas fa-balance-scale text-purple-600 text-lg"></i>
-                                    </div>
-                                    <div class="ml-3 w-0 flex-1">
-                                        <dl>
-                                            <dt class="text-sm font-medium text-gray-500 truncate">
-                                                Saldo
-                                            </dt>
-                                            <dd class="flex items-baseline">
-                                                <div class="text-lg font-semibold text-gray-900">
-                                                    R$ {{ number_format(($contasAReceber ?? 0) - ($contasAPagar ?? 0), 0, ',', '.') }}
                                                 </div>
                                             </dd>
                                         </dl>
@@ -251,6 +228,157 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Empréstimos Atrasados -->
+<div id="atrasadosModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-6xl max-h-[90vh] flex flex-col">
+        <!-- Header do Modal -->
+        <div class="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-t-lg" style="background: linear-gradient(to right, #f97316, #ef4444);">
+            <div class="flex items-center">
+                <div class="bg-white bg-opacity-20 rounded-full p-3 mr-4">
+                    <i class="fas fa-exclamation-triangle text-white text-2xl"></i>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-white">Empréstimos Atrasados</h2>
+                    <p class="text-orange-100 text-lg">Total de {{ $atrasados }} empréstimos em atraso</p>
+                </div>
+            </div>
+            <button onclick="closeAtrasadosModal()" class="text-white hover:text-orange-200 transition-colors duration-200 bg-white bg-opacity-20 rounded-full p-2">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="p-6 bg-gray-50 border-b border-gray-200">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                    <div class="flex items-center">
+                        <div class="p-2 bg-red-100 rounded-lg">
+                            <i class="fas fa-dollar-sign text-red-600"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-gray-600">Valor Total Atrasado</p>
+                            <p class="text-lg font-bold text-gray-900">R$ {{ number_format($dinheiroNaRuaAtrasado, 2, ',', '.') }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                    <div class="flex items-center">
+                        <div class="p-2 bg-orange-100 rounded-lg">
+                            <i class="fas fa-percentage text-orange-600"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-gray-600">Juros Atrasados</p>
+                            <p class="text-lg font-bold text-gray-900">R$ {{ number_format($jurosMensaisAtrasados, 2, ',', '.') }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                    <div class="flex items-center">
+                        <div class="p-2 bg-blue-100 rounded-lg">
+                            <i class="fas fa-calendar text-blue-600"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-gray-600">Data Atual</p>
+                            <p class="text-lg font-bold text-gray-900">{{ \Carbon\Carbon::now()->format('d/m/Y') }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content com Scroll -->
+        <div class="flex-1 overflow-hidden">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-900">Detalhes dos Empréstimos Atrasados</h3>
+                    <div class="flex space-x-2">
+                        <button onclick="printAtrasados()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm font-medium transition-colors duration-200">
+                            <i class="fas fa-print mr-2"></i>Gerar PDF
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tabela com Scroll -->
+                <div class="overflow-x-auto">
+                    <div class="overflow-y-auto max-h-96">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50 sticky top-0">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <i class="fas fa-user mr-2"></i>Cliente
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <i class="fas fa-dollar-sign mr-2"></i>Valor
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <i class="fas fa-calendar mr-2"></i>Data Vencimento
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <i class="fas fa-clock mr-2"></i>Dias Atraso
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <i class="fas fa-percentage mr-2"></i>Juros
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                @forelse($emprestimosAtrasadosDetalhados as $emprestimo)
+                                    <tr class="hover:bg-gray-50 transition-colors duration-150">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-10 w-10">
+                                                    <div class="h-10 w-10 rounded-full bg-orange-100 flex items-center justify-center">
+                                                        <i class="fas fa-user text-orange-600"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">{{ $emprestimo['nome'] }}</div>
+                                                    <div class="text-sm text-gray-500">ID: {{ $emprestimo['id'] }}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-semibold text-gray-900">R$ {{ number_format($emprestimo['valor'], 2, ',', '.') }}</div>
+                                            <div class="text-sm text-gray-500">{{ $emprestimo['juros'] }}% juros</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">{{ \Carbon\Carbon::parse($emprestimo['dataPagamento'])->format('d/m/Y') }}</div>
+                                            <div class="text-sm text-gray-500">{{ $emprestimo['status'] }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                                {{ $emprestimo['diasAtraso'] }} dias
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            R$ {{ number_format($emprestimo['valorJuros'], 2, ',', '.') }}
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                                            <i class="fas fa-check-circle text-6xl mb-4"></i>
+                                            <div class="text-xl font-medium text-gray-900 mb-2">Nenhum empréstimo atrasado!</div>
+                                            <div class="text-gray-600">Todos os empréstimos estão em dia.</div>
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer do Modal -->
+        <div class="flex justify-end p-6 border-t border-gray-200 bg-gray-50 rounded-b-lg">
+            <button onclick="closeAtrasadosModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200">
+                Fechar
+            </button>
         </div>
     </div>
 </div>
@@ -321,6 +449,36 @@ if (!window.chartsInitialized) {
         }
     });
 }
+
+// Funções do Modal de Atrasados
+function openAtrasadosModal() {
+    document.getElementById('atrasadosModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeAtrasadosModal() {
+    document.getElementById('atrasadosModal').classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
+
+function printAtrasados() {
+    // Abrir nova janela para gerar PDF
+    window.open('/emprestimos/atrasados/pdf', '_blank');
+}
+
+// Fechar modal ao clicar fora
+document.getElementById('atrasadosModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeAtrasadosModal();
+    }
+});
+
+// Fechar modal com ESC
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeAtrasadosModal();
+    }
+});
 </script>
 @endpush
 @endsection

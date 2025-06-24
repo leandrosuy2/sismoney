@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class DashboardController extends Controller
 {
@@ -353,6 +354,23 @@ class DashboardController extends Controller
         $jurosMensais = $this->getJurosMensais($userId);
         Log::info('Dados para gráfico de juros:', $jurosMensais);
 
+        // Dados dos empréstimos atrasados para o modal
+        $emprestimosAtrasadosDetalhados = $emprestimosAtrasados->map(function($emprestimo) {
+            $dataPagamento = Carbon::parse($emprestimo->dataPagamento);
+            $diasAtraso = Carbon::today()->diffInDays($dataPagamento);
+            $valorJuros = $emprestimo->valor * ($emprestimo->juros / 100);
+            return [
+                'id' => $emprestimo->id,
+                'nome' => $emprestimo->nome,
+                'valor' => $emprestimo->valor,
+                'juros' => $emprestimo->juros,
+                'dataPagamento' => $emprestimo->dataPagamento,
+                'status' => $emprestimo->status,
+                'diasAtraso' => $diasAtraso,
+                'valorJuros' => $valorJuros
+            ];
+        });
+
         return view('dashboard', compact(
             'totalEmprestado',
             'totalJurosReceber',
@@ -367,7 +385,8 @@ class DashboardController extends Controller
             'evolucaoEmprestimos',
             'jurosMensais',
             'emprestimosPendentesCount',
-            'emprestimosPagos'
+            'emprestimosPagos',
+            'emprestimosAtrasadosDetalhados'
         ));
     }
 
@@ -429,6 +448,59 @@ class DashboardController extends Controller
             'labels' => $ultimos6Meses->toArray(),
             'data' => $data
         ];
+    }
+
+    public function pdfAtrasados()
+    {
+        try {
+            $userId = Auth::user()->idUsuario;
+
+            $emprestimosAtrasados = Emprestimo::where('idUsuario', $userId)
+                ->where('dataPagamento', '!=', '0000-00-00')
+                ->where('dataPagamento', '!=', null)
+                ->whereDate('dataPagamento', '<=', Carbon::today())
+                ->get();
+
+            $emprestimosAtrasadosDetalhados = $emprestimosAtrasados->map(function($emprestimo) {
+                $dataPagamento = Carbon::parse($emprestimo->dataPagamento);
+                $diasAtraso = Carbon::today()->diffInDays($dataPagamento);
+                $valorJuros = $emprestimo->valor * ($emprestimo->juros / 100);
+                return [
+                    'id' => $emprestimo->id,
+                    'nome' => $emprestimo->nome,
+                    'valor' => $emprestimo->valor,
+                    'juros' => $emprestimo->juros,
+                    'dataPagamento' => $emprestimo->dataPagamento,
+                    'status' => $emprestimo->status,
+                    'diasAtraso' => $diasAtraso,
+                    'valorJuros' => $valorJuros
+                ];
+            });
+
+            $totalValor = $emprestimosAtrasados->sum('valor');
+            $totalJuros = $emprestimosAtrasados->sum(function($emprestimo) {
+                return $emprestimo->valor * ($emprestimo->juros / 100);
+            });
+
+            $pdf = Pdf::loadView('pdf.atrasados', [
+                'emprestimos' => $emprestimosAtrasadosDetalhados,
+                'totalValor' => $totalValor,
+                'totalJuros' => $totalJuros,
+                'quantidade' => $emprestimosAtrasados->count(),
+                'dataAtual' => Carbon::now()->format('d/m/Y')
+            ]);
+
+            return $pdf->download('emprestimos-atrasados-' . Carbon::now()->format('d-m-Y') . '.pdf');
+
+        } catch (\Exception $e) {
+            Log::error('Erro ao gerar PDF dos atrasados:', [
+                'error' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile()
+            ]);
+
+            return redirect()->back()->with('error', 'Erro ao gerar PDF. Tente novamente.');
+        }
     }
 }
 
