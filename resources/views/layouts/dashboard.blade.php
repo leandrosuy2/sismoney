@@ -112,6 +112,12 @@
             animation: slideIn 0.3s ease-out;
         }
     </style>
+
+    <!-- PWA Icons para iOS -->
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="/icons/icon-192x192.png">
 </head>
 
 <body class="font-sans antialiased">

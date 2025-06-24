@@ -28,7 +28,7 @@ function showNotification(title, message, type = 'info') {
     new Notification(title, {
       body: message,
       icon: '/icons/icon-192x192.png',
-      badge: '/icons/icon-72x72.png'
+      badge: '/icons/icon-192x192.png'
     });
   }
 }
@@ -150,22 +150,28 @@ document.addEventListener('DOMContentLoaded', () => {
     showInstallButton();
   }
 
-  // Adicionar botão manual se necessário
+  // Adicionar botão manual se necessário (para mobile)
   setTimeout(() => {
     const installButton = document.getElementById('install-button');
-    if (!installButton && window.matchMedia('(display-mode: browser)').matches) {
-      console.log('Criando botão manual de instalação');
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+    if (!installButton && isMobile) {
+      console.log('Criando botão manual de instalação para mobile');
       const manualButton = document.createElement('button');
       manualButton.id = 'install-button';
       manualButton.innerHTML = '<i class="fas fa-download"></i> Instalar App';
       manualButton.className = 'fixed bottom-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-green-700 transition-colors duration-200 z-50';
       manualButton.style.display = 'block';
       manualButton.onclick = () => {
-        alert('Para instalar o app:\n\n1. Clique no ícone de instalação na barra de endereços\n2. Ou use o menu do navegador > "Adicionar à tela inicial"');
+        if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+          alert('Para instalar no iPhone/iPad:\n\n1. Toque no botão de compartilhar (quadrado com seta)\n2. Selecione "Adicionar à Tela de Início"\n3. Toque em "Adicionar"');
+        } else {
+          alert('Para instalar no Android:\n\n1. Toque no menu (3 pontos)\n2. Selecione "Adicionar à tela inicial"\n3. Confirme a instalação');
+        }
       };
       document.body.appendChild(manualButton);
     }
-  }, 2000);
+  }, 3000);
 });
 
 // Exportar funções para uso global
