@@ -1,26 +1,23 @@
 const CACHE_NAME = 'sismoney-v1.0.0';
-const urlsToCache = [
-  '/',
-  '/css/app.css',
-  '/js/app.js',
-  '/manifest.json',
-  '/icons/icon-192x192.png',
-  '/icons/icon-512x512.png'
-];
 
 // Instalação do Service Worker
 self.addEventListener('install', (event) => {
+  console.log('Service Worker instalando...');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
         console.log('Cache aberto');
-        return cache.addAll(urlsToCache);
+        return cache.addAll([
+          '/',
+          '/manifest.json'
+        ]);
       })
   );
 });
 
 // Ativação do Service Worker
 self.addEventListener('activate', (event) => {
+  console.log('Service Worker ativando...');
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
@@ -38,37 +35,9 @@ self.addEventListener('activate', (event) => {
 // Interceptação de requisições
 self.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        // Retorna o cache se encontrado
-        if (response) {
-          return response;
-        }
-
-        // Se não estiver em cache, busca na rede
-        return fetch(event.request)
-          .then((response) => {
-            // Verifica se a resposta é válida
-            if (!response || response.status !== 200 || response.type !== 'basic') {
-              return response;
-            }
-
-            // Clona a resposta para poder usá-la no cache
-            const responseToCache = response.clone();
-
-            caches.open(CACHE_NAME)
-              .then((cache) => {
-                cache.put(event.request, responseToCache);
-              });
-
-            return response;
-          })
-          .catch(() => {
-            // Fallback para páginas offline
-            if (event.request.destination === 'document') {
-              return caches.match('/offline.html');
-            }
-          });
+    fetch(event.request)
+      .catch(() => {
+        return caches.match(event.request);
       })
   );
 });

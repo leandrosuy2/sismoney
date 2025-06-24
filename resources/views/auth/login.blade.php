@@ -4,6 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - SISMoney</title>
+
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#4f46e5">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="SisMoney">
+    <meta name="msapplication-TileColor" content="#4f46e5">
+    <meta name="msapplication-tap-highlight" content="no">
+
+    <!-- PWA Icons para iOS -->
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="/icons/icon-192x192.png">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -36,6 +54,12 @@
                 <div class="lg:hidden text-center mb-8">
                     <i class="fas fa-hand-holding-usd text-4xl text-green-600 mb-2"></i>
                     <h1 class="text-2xl font-bold text-gray-900">SISMoney</h1>
+
+                    <!-- Botão de instalação PWA (apenas mobile) -->
+                    <button id="install-pwa-btn" class="mt-4 bg-indigo-600 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-indigo-700 transition-colors duration-200 hidden">
+                        <i class="fas fa-download mr-2"></i>
+                        Instalar App
+                    </button>
                 </div>
 
                 <div class="bg-white rounded-2xl shadow-xl p-8">
@@ -114,5 +138,38 @@
             </div>
         </div>
     </div>
+
+    <!-- PWA Script -->
+    <script>
+        // Verificar se é mobile
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+        if (isMobile) {
+            // Registrar Service Worker
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js')
+                    .then((registration) => {
+                        console.log('Service Worker registrado:', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.log('Erro no Service Worker:', error);
+                    });
+            }
+
+            // Mostrar botão de instalação
+            const installBtn = document.getElementById('install-pwa-btn');
+            if (installBtn) {
+                installBtn.classList.remove('hidden');
+
+                installBtn.addEventListener('click', () => {
+                    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                        alert('Para instalar no iPhone/iPad:\n\n1. Toque no botão de compartilhar (quadrado com seta)\n2. Selecione "Adicionar à Tela de Início"\n3. Toque em "Adicionar"');
+                    } else {
+                        alert('Para instalar no Android:\n\n1. Toque no menu (3 pontos)\n2. Selecione "Adicionar à tela inicial"\n3. Confirme a instalação');
+                    }
+                });
+            }
+        }
+    </script>
 </body>
 </html>
