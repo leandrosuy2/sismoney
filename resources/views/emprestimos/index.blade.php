@@ -89,8 +89,16 @@
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @forelse($emprestimos as $emprestimo)
-                                    <tr>
+                                    @php
+                                        $dataAtual = \Carbon\Carbon::now();
+                                        $dataPagamento = \Carbon\Carbon::parse($emprestimo->dataPagamento);
+                                        $isAtrasado = $dataAtual->gt($dataPagamento) && $emprestimo->status !== 'pago';
+                                    @endphp
+                                    <tr class="{{ $isAtrasado ? 'bg-red-50 border-l-4 border-red-500' : '' }}">
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                            @if($isAtrasado)
+                                                <i class="fas fa-exclamation-triangle text-red-500 mr-1" title="Empréstimo em atraso"></i>
+                                            @endif
                                             {{ Str::limit($emprestimo->nome, 7, '...') }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -521,6 +529,24 @@
 
     .animate-modal-leave {
         animation: modal-leave 0.2s ease-in;
+    }
+
+    /* Estilo para linhas atrasadas */
+    .bg-red-50 {
+        background-color: #fef2f2;
+    }
+
+    .border-l-4 {
+        border-left-width: 4px;
+    }
+
+    .border-red-500 {
+        border-color: #ef4444;
+    }
+
+    /* Hover effect para linhas atrasadas */
+    tr.bg-red-50:hover {
+        background-color: #fee2e2 !important;
     }
 </style>
 @endpush
