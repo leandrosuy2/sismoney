@@ -1,0 +1,12 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" rx="110" fill="#4f46e5"/>
+  <circle cx="256" cy="256" r="200" fill="white" opacity="0.15"/>
+  <circle cx="256" cy="256" r="140" fill="white" opacity="0.25"/>
+  <circle cx="256" cy="170" r="70" fill="white"/>
+  <text x="256" y="200" text-anchor="middle" font-family="Arial, sans-serif" font-size="70" font-weight="bold" fill="#4f46e5">R$</text>
+  <path d="M 90 370 L 180 320 L 270 350 L 360 280 L 450 350" stroke="white" stroke-width="18" stroke-linecap="round" fill="none"/>
+  <circle cx="180" cy="320" r="14" fill="white"/>
+  <circle cx="270" cy="350" r="14" fill="white"/>
+  <circle cx="360" cy="280" r="14" fill="white"/>
+  <circle cx="450" cy="350" r="14" fill="white"/>
+</svg>
