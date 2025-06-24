@@ -17,6 +17,7 @@ class Emprestimo extends Model
         'valor',
         'juros',
         'valor_jurosdiarios',
+        'meses',
         'dataPagamento',
         'telefone',
         'cpf',
@@ -28,6 +29,7 @@ class Emprestimo extends Model
         'valor' => 'decimal:2',
         'juros' => 'decimal:2',
         'valor_jurosdiarios' => 'integer',
+        'meses' => 'integer',
         'dataPagamento' => 'date'
     ];
 }

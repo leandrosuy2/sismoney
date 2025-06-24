@@ -65,6 +65,7 @@ class EmprestimoController extends Controller
             $emprestimo->valor = $request->valor;
             $emprestimo->juros = $request->juros;
             $emprestimo->valor_jurosdiarios = $request->valor_jurosdiarios;
+            $emprestimo->meses = 0; // Valor padrão
             $emprestimo->dataPagamento = $request->dataPagamento;
             $emprestimo->telefone = $request->telefone;
             $emprestimo->status = $request->status ?? null;
@@ -145,6 +146,7 @@ class EmprestimoController extends Controller
         $emprestimo->valor = $request->valor;
         $emprestimo->juros = $request->juros;
         $emprestimo->valor_jurosdiarios = $request->valor_jurosdiarios;
+        $emprestimo->meses = 0; // Valor padrão
         $emprestimo->dataPagamento = $request->dataPagamento;
         $emprestimo->telefone = $request->telefone;
 
