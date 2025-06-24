@@ -175,14 +175,29 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="9" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                                        <td colspan="9" class="px-6 py-8 whitespace-normal text-sm text-gray-500 text-center">
                                             @if(request('search'))
-                                                Nenhum empréstimo encontrado para "{{ request('search') }}".
-                                                <a href="{{ route('emprestimos.index') }}" class="text-indigo-600 hover:text-indigo-900 ml-2">
-                                                    Ver todos os empréstimos
-                                                </a>
+                                                <div class="space-y-2">
+                                                    <p class="text-gray-600">
+                                                        <i class="fas fa-search mr-2"></i>
+                                                        Nenhum empréstimo encontrado para "<span class="font-semibold text-gray-800">{{ request('search') }}</span>"
+                                                    </p>
+                                                    <a href="{{ route('emprestimos.index') }}"
+                                                       class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">
+                                                        <i class="fas fa-list mr-2"></i>
+                                                        Ver todos os empréstimos
+                                                    </a>
+                                                </div>
                                             @else
-                                                Nenhum empréstimo encontrado.
+                                                <div class="space-y-2">
+                                                    <p class="text-gray-600">
+                                                        <i class="fas fa-inbox mr-2"></i>
+                                                        Nenhum empréstimo encontrado.
+                                                    </p>
+                                                    <p class="text-xs text-gray-500">
+                                                        Comece criando seu primeiro empréstimo.
+                                                    </p>
+                                                </div>
                                             @endif
                                         </td>
                                     </tr>
