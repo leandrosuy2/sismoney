@@ -142,7 +142,7 @@ class DashboardController extends Controller
         $emprestimosAtrasados = Emprestimo::where('idUsuario', $userId)
             ->where('dataPagamento', '!=', '0000-00-00') // Excluir datas inválidas
             ->where('dataPagamento', '!=', null) // Excluir datas nulas
-            ->whereDate('dataPagamento', '<', Carbon::today())
+            ->whereDate('dataPagamento', '<=', Carbon::today()) // Mudança: <= em vez de < para incluir hoje
             ->get();
 
         Log::info('Empréstimos atrasados encontrados:', [
@@ -152,6 +152,131 @@ class DashboardController extends Controller
             'datas' => $emprestimosAtrasados->pluck('dataPagamento')->toArray(),
             'status' => $emprestimosAtrasados->pluck('status')->toArray()
         ]);
+
+        // LOG DETALHADO PARA DEBUG - Verificar TODOS os empréstimos do usuário
+        $todosEmprestimosUsuario = Emprestimo::where('idUsuario', $userId)->get();
+        Log::info('TODOS os empréstimos do usuário:', [
+            'user_id' => $userId,
+            'quantidade_total' => $todosEmprestimosUsuario->count(),
+            'data_atual' => Carbon::today()->format('Y-m-d')
+        ]);
+
+        // Verificar cada empréstimo individualmente
+        foreach ($todosEmprestimosUsuario as $emprestimo) {
+            $dataPagamento = $emprestimo->dataPagamento;
+            $isDataValida = !empty($dataPagamento) && $dataPagamento != '0000-00-00';
+            $isAtrasado = false;
+
+            if ($isDataValida) {
+                try {
+                    $dataPagamentoObj = Carbon::parse($dataPagamento);
+                    $isAtrasado = $dataPagamentoObj->startOfDay()->lt(Carbon::today());
+                } catch (\Exception $e) {
+                    $isAtrasado = false;
+                }
+            }
+
+            Log::info('Verificação individual do empréstimo:', [
+                'id' => $emprestimo->id,
+                'nome' => $emprestimo->nome,
+                'data_pagamento' => $dataPagamento,
+                'data_valida' => $isDataValida,
+                'is_atrasado' => $isAtrasado,
+                'status' => $emprestimo->status,
+                'valor' => $emprestimo->valor
+            ]);
+        }
+
+        // Verificar se há algum empréstimo que deveria estar na contagem mas não está
+        $emprestimosComDataPassada = $todosEmprestimosUsuario->filter(function($emprestimo) {
+            if (empty($emprestimo->dataPagamento) || $emprestimo->dataPagamento == '0000-00-00') {
+                return false;
+            }
+            try {
+                return Carbon::parse($emprestimo->dataPagamento)->startOfDay()->lte(Carbon::today());
+            } catch (\Exception $e) {
+                return false;
+            }
+        });
+
+        Log::info('Empréstimos com data passada (filtro manual):', [
+            'quantidade' => $emprestimosComDataPassada->count(),
+            'ids' => $emprestimosComDataPassada->pluck('id')->toArray()
+        ]);
+
+        // VERIFICAÇÃO ESPECIAL - Verificar se há empréstimos com data igual a hoje
+        $emprestimosComDataHoje = $todosEmprestimosUsuario->filter(function($emprestimo) {
+            if (empty($emprestimo->dataPagamento) || $emprestimo->dataPagamento == '0000-00-00') {
+                return false;
+            }
+            try {
+                return Carbon::parse($emprestimo->dataPagamento)->startOfDay()->eq(Carbon::today());
+            } catch (\Exception $e) {
+                return false;
+            }
+        });
+
+        Log::info('Empréstimos com data de hoje (deveriam estar atrasados?):', [
+            'quantidade' => $emprestimosComDataHoje->count(),
+            'emprestimos' => $emprestimosComDataHoje->map(function($emprestimo) {
+                return [
+                    'id' => $emprestimo->id,
+                    'nome' => $emprestimo->nome,
+                    'data_pagamento' => $emprestimo->dataPagamento,
+                    'status' => $emprestimo->status,
+                    'valor' => $emprestimo->valor
+                ];
+            })->toArray()
+        ]);
+
+        // VERIFICAÇÃO ESPECIAL - Verificar se há empréstimos com data de ontem
+        $emprestimosComDataOntem = $todosEmprestimosUsuario->filter(function($emprestimo) {
+            if (empty($emprestimo->dataPagamento) || $emprestimo->dataPagamento == '0000-00-00') {
+                return false;
+            }
+            try {
+                return Carbon::parse($emprestimo->dataPagamento)->startOfDay()->eq(Carbon::yesterday());
+            } catch (\Exception $e) {
+                return false;
+            }
+        });
+
+        Log::info('Empréstimos com data de ontem:', [
+            'quantidade' => $emprestimosComDataOntem->count(),
+            'emprestimos' => $emprestimosComDataOntem->map(function($emprestimo) {
+                return [
+                    'id' => $emprestimo->id,
+                    'nome' => $emprestimo->nome,
+                    'data_pagamento' => $emprestimo->dataPagamento,
+                    'status' => $emprestimo->status,
+                    'valor' => $emprestimo->valor
+                ];
+            })->toArray()
+        ]);
+
+        // Verificar diferenças
+        $idsAtrasados = $emprestimosAtrasados->pluck('id')->toArray();
+        $idsComDataPassada = $emprestimosComDataPassada->pluck('id')->toArray();
+
+        $diferencas = array_diff($idsComDataPassada, $idsAtrasados);
+        if (!empty($diferencas)) {
+            Log::warning('DIFERENÇA ENCONTRADA! IDs que têm data passada mas não estão na contagem:', [
+                'ids_diferenca' => $diferencas
+            ]);
+
+            $emprestimosDiferenca = $todosEmprestimosUsuario->whereIn('id', $diferencas);
+            Log::info('Detalhes dos empréstimos com diferença:', [
+                'emprestimos' => $emprestimosDiferenca->map(function($emprestimo) {
+                    return [
+                        'id' => $emprestimo->id,
+                        'nome' => $emprestimo->nome,
+                        'data_pagamento' => $emprestimo->dataPagamento,
+                        'status' => $emprestimo->status,
+                        'valor' => $emprestimo->valor
+                    ];
+                })->toArray()
+            ]);
+        }
 
         // Verificar TODOS os empréstimos pendentes para debug
         $todosPendentes = Emprestimo::where('status', 'pendente')
